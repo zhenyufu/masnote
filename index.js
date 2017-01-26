@@ -6,7 +6,7 @@ const {app, BrowserWindow, Menu} = require('electron');
 //const BrowserWindow = electron.BrowserWindow;
 //const Menu = electron.Menu;
 //app.disableHardwareAcceleration();
-var GyMenus = require("./js/menus.js");
+//var GyMenus = require("./js/menus.js");
 
 var mainWindow;
 
