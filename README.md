@@ -1,1 +1,1 @@
-# masnote
+# masnote### to update tinymce  * go to tinymce repo* run `grunt`* go to tmp, unzip, and put it in js/

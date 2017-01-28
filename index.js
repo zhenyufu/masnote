@@ -6,7 +6,7 @@ const {app, BrowserWindow, Menu} = require('electron');
 //const BrowserWindow = electron.BrowserWindow;
 //const Menu = electron.Menu;
 //app.disableHardwareAcceleration();
-var GyMenus = require("./js/menus.js");
+var MasMenus = require("./js/menus.js");
 
 var mainWindow;
 
@@ -14,9 +14,9 @@ function createWindow () {
     //mainWindow = new BrowserWindow({width: 800, height: 600});
     
     mainWindow = new BrowserWindow({width: 1024, height: 900});
-    var gyMenus = new GyMenus(electron, mainWindow);
+    var masMenus = new MasMenus(electron, mainWindow);
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(gyMenus.mainMenu));
+    Menu.setApplicationMenu(Menu.buildFromTemplate(masMenus.mainMenu));
     
     mainWindow.loadURL(`file://${__dirname}/index.html`);
     //mainWindow.loadURL(`file://${__dirname}/shelf/page1.html`);
