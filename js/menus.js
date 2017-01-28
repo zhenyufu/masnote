@@ -1,8 +1,8 @@
 module.exports = function (electron, browserWindow) {
     var module = {};
 
-    module.mainMenu = [{
-        label: "File",
+    module.mainMenu = [
+        { label: "File",
             submenu: [
                 {
                     label: "Undo",
@@ -36,7 +36,23 @@ module.exports = function (electron, browserWindow) {
                     ]
                 }
             ]
-     }];
+        },
+        { label: 'Edit',
+            submenu: [
+            {
+            role: 'undo'
+            },
+            {
+            role: 'redo'
+            },
+            {
+            role: 'selectall'
+            }
+            ]
+        }
+    
+    
+    ];
 
 
     return module;
