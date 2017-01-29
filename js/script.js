@@ -12,7 +12,11 @@ tinymce.init({
   toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
   
   /*
-  plugins: [
+   external_plugins: {
+    'myplugin': '/js/myplugin/plugin.min.js'
+  }
+
+     plugins: [
     'advlist autolink lists link image charmap print preview anchor',
     'searchreplace visualblocks code fullscreen',
     'insertdatetime media table contextmenu paste code'
