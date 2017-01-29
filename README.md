@@ -1,1 +1,1 @@
-# masnote### to update tinymce* in node_modules
+# masnoterun `npm install` to install dependencies
