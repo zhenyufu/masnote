@@ -1,1 +1,1 @@
-# masnote### to update tinymce  * write a python script sometime to wget and unip from website, for now:* go to tinymce repo* run `grunt`* go to tmp, unzip, and put it in js/
+# masnote### to update tinymce* in node_modules
