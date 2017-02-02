@@ -3,19 +3,16 @@ const {app, BrowserWindow, Menu} = require('electron');
 
 
 //app.disableHardwareAcceleration();
-var MasMenus = require("./js/menus.js");
-
 var mainWindow;
 
 function createWindow () {
-    //mainWindow = new BrowserWindow({width: 800, height: 600});
     
     mainWindow = new BrowserWindow({width: 1024, height: 900});
-    var masMenus = new MasMenus(mainWindow);
-
-    Menu.setApplicationMenu(Menu.buildFromTemplate(masMenus.mainMenu));
+    // toggle this to remove the default menu
+    mainWindow.setMenu(null);
     
     mainWindow.loadURL(`file://${__dirname}/index.html`);
+    
     mainWindow.on("closed", function () {
         mainWindow = null;
     });

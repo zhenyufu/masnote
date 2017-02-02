@@ -1,12 +1,11 @@
 const electron = require('electron');
 
-var MasFunctions = require("./functions.js");
 
 module.exports = function (browserWindow) {
     var module = {};
 
     module.mainMenu = [
-        { label: "File",
+        { label: "Debug",
             submenu: [
                 {
                     label: "Undo",
@@ -14,10 +13,9 @@ module.exports = function (browserWindow) {
                     role: 'undo'
                 },
                 {
-                    label: "Open",
+                    label: "nope",
                     accelerator: "CmdOrCtrl+O",
                     click: () => {
-                        MasFunctions.handleButtonOpenPage();                       
                         //electron.dialog.showOpenDialog({ properties: [ "openFile", "openDirectory", "multiSelections" ]});
                     }
                 },

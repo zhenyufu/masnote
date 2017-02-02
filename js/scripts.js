@@ -6,14 +6,16 @@ const FileSystem = require("fs");
 // Private Variables
 var masContent, masFilePath;
 
+onload = function() {
+     masContent = document.getElementById("mce-main");
+     //setMasContent("<b>yo</b>");
+     masFilePath = null;
+    alert(masContent.innerHTML); 
+ }
 
-
-// Public
-module.exports = handleButtonOpenPage;
-module.exports = handleButtonOpenBook;
-module.exports = handleButtonSave;
 
 function handleButtonOpenPage() {
+     //console.log(masContent.innerHTML);
     dialog.showOpenDialog({properties: ['openFile']}, function(myPath) { doOpenPage(myPath.toString()); });
 }
 
@@ -31,6 +33,23 @@ function handleButtonSave() {
 }
 
 
+// Public
+
+module.exports = {
+    masContent: masContent,
+    masFilePath: masFilePath,
+    handleButtonOpenPage: handleButtonOpenPage,
+    handleButtonOpenBook: handleButtonOpenBook,
+    handleButtonSave: handleButtonSave,
+};
+/*
+module.exports = masContent;
+module.exports = masFilePath;
+
+module.exports = handleButtonOpenPage;
+module.exports = handleButtonOpenBook;
+module.exports = handleButtonSave;
+*/
 
 
 // Private
@@ -48,6 +67,7 @@ function doOpenPage(myPath){
 
 // helper functions 
 function setMasContent(myHtml){
+    alert(masContent);
      masContent.innerHTML = myHtml;
 }
 
