@@ -1,4 +1,8 @@
-module.exports = function (electron, browserWindow) {
+const electron = require('electron');
+
+var MasFunctions = require("./functions.js");
+
+module.exports = function (browserWindow) {
     var module = {};
 
     module.mainMenu = [
@@ -13,7 +17,8 @@ module.exports = function (electron, browserWindow) {
                     label: "Open",
                     accelerator: "CmdOrCtrl+O",
                     click: () => {
-                        electron.dialog.showOpenDialog({ properties: [ "openFile", "openDirectory", "multiSelections" ]});
+                        MasFunctions.handleButtonOpenPage();                       
+                        //electron.dialog.showOpenDialog({ properties: [ "openFile", "openDirectory", "multiSelections" ]});
                     }
                 },
                 {

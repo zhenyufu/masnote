@@ -1,10 +1,7 @@
 const electron = require('electron');
 const {app, BrowserWindow, Menu} = require('electron');
 
-//const electron = require("electron");
-//const app = electron.app;
-//const BrowserWindow = electron.BrowserWindow;
-//const Menu = electron.Menu;
+
 //app.disableHardwareAcceleration();
 var MasMenus = require("./js/menus.js");
 
@@ -14,12 +11,11 @@ function createWindow () {
     //mainWindow = new BrowserWindow({width: 800, height: 600});
     
     mainWindow = new BrowserWindow({width: 1024, height: 900});
-    var masMenus = new MasMenus(electron, mainWindow);
+    var masMenus = new MasMenus(mainWindow);
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(masMenus.mainMenu));
     
     mainWindow.loadURL(`file://${__dirname}/index.html`);
-    //mainWindow.loadURL(`file://${__dirname}/shelf/page1.html`);
     mainWindow.on("closed", function () {
         mainWindow = null;
     });
