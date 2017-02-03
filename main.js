@@ -9,7 +9,7 @@ function createWindow () {
     
     mainWindow = new BrowserWindow({width: 1024, height: 900});
     // toggle this to remove the default menu
-    mainWindow.setMenu(null);
+    //mainWindow.setMenu(null);
     
     mainWindow.loadURL(`file://${__dirname}/index.html`);
     
