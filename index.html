@@ -4,14 +4,35 @@
         <title>Masnote</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+ 
+        <link rel="stylesheet" href="css/style.css"> 
+  
 
     </head>
   
     
     
     <body id="">
+        
+        
+        <div id="top-menu">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#news">News</a></li>
+            <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn" onclick="myFunction()">Dropdown</a>
+                <div class="dropdown-content" id="myDropdown">
+                    <a href="#">Link 1</a>
+                    <a href="#">Link 2</a>
+                    <a href="#">Link 3</a>
+                </div>
+            </li>
+        </ul>
+
+
+
+        </div> 
         <div id="mce-main">
         
         </div>
@@ -19,9 +40,9 @@
             
             
             
-            
+           
         <script src='node_modules/tinymce/tinymce.min.js'></script> 
-  
+        <script src="js/gui.js"></script> 
         <script src="js/mce.js"></script> 
         <script src="js/script.js"></script> 
 
