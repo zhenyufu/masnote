@@ -10,8 +10,12 @@ onload = function() {
      masContent = document.getElementById("mce-main");
      setMasContent("<b>yo</b>");
      masFilePath = null;
-    alert(masContent.innerHTML); 
- }
+ 
+     document.getElementById("mas-open-page").addEventListener("click", handleButtonOpenPage); 
+
+
+
+}
 
 
 function handleButtonOpenPage() {
