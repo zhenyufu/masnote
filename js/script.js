@@ -18,7 +18,8 @@ onload = function() {
 
  tinymce.init({
    selector: 'div#mce-main',
-   height: 500,
+   //fixed_toolbar_container: '#mce-toolbar',
+   height: 1200,
    menubar: false,
    plugins: [
      'advlist autolink lists link image charmap print preview hr anchor pagebreak',
