@@ -3,6 +3,7 @@ const {remote, clipboard} = require('electron');
 const {Menu, MenuItem, dialog } = remote;
 const FileSystem = require("fs");
 
+var buttonArrayNewBook, buttonArrayOpenBook, buttonArraySaveBook, buttonArraySaveAll;
 var masContent, masFilePath;
 var mceEditor;
 onload = function() {
@@ -11,7 +12,15 @@ onload = function() {
      //setMasContent("<b>yo</b>");
      masFilePath = null;
     
-     document.getElementById("mas-open-page").addEventListener("click", handleButtonOpenPage); 
+     //document.getElementById("mas-open-page").addEventListener("click", handleButtonOpenPage); 
+
+    buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
+    buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
+    buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
+    buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
+    for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
+
+
 
 
 }
@@ -54,6 +63,10 @@ onload = function() {
 });
 
 
+ function handleButtonNewBook() {
+     alert("hi");
+     setMasContent("");
+ }
 
 
 
@@ -63,7 +76,7 @@ function handleButtonOpenPage() {
 }
 
 function handleButtonOpenBook() {
-    dialog.showOpenDialog({properties: ['openDirectory']}, function(myPath) { doOpenBook(myPath.toString()); });
+    dialog.showOpenDialog({properties: ['openiFile']}, function(myPath) { doOpenBook(myPath.toString()); });
 }
 
 function handleButtonSave() {
