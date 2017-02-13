@@ -2,6 +2,7 @@
 const {remote, clipboard} = require('electron');
 const {Menu, MenuItem, dialog } = remote;
 const FileSystem = require("fs");
+var exec = require('child_process').exec;
 
 var buttonArrayNewBook, buttonArrayOpenBook, buttonArraySaveBook, buttonArraySaveAll;
 var masContent, masFilePath;
@@ -66,6 +67,14 @@ onload = function() {
  function handleButtonNewBook() {
      alert("hi");
      setMasContent("");
+    // mkdir
+    // git init
+    exec('git status', {cwd: '../test'}, function (error, stdout, stderr){
+          // result
+          console.log("pwd: " + error + " : " + stdout);
+      });
+
+
  }
 
 
