@@ -1,0 +1,119 @@
+/* HTML ##########################################**/
+html, body{height:100%;}
+body {margin: 0px;}
+
+
+
+
+/* position ##########################################**/
+.cs-left{float:left;}
+.cs-right{float:right;}
+
+
+
+
+/* padding ##########################################**/
+.cs-height-full{height: 100%;}
+.cs-width-full{width:100%;}
+
+.cs-padding-1{padding:1px;}
+.cs-padding-2{padding:2px;}
+.cs-padding-4{padding:4px;}
+.cs-padding-8{padding:8px;}
+.cs-padding-16{padding:16px;}
+.cs-padding-32{padding:32px;}
+.cs-padding-64{padding:64px;}
+.cs-padding-128{padding:128px;}
+
+
+
+
+
+/* resposive size ##########################################**/
+@media screen and (min-width:663px){
+    .cs-sidenav.cs-collapse{display:block!important;}
+    .cs-hide-large{display:none!important;}
+}
+
+@media screen and (max-width:662px){
+    .cs-sidenav.cs-collapse{display:none;}
+    .cs-main{margin-left:0!important;margin-right:0!important;}
+}
+
+
+
+
+
+/* navagation ##########################################**/
+.cs-opennav,.cs-sidenav{
+    -webkit-transition:background-color .3s,color .15s,box-shadow .3s,opacity 0.3s;
+    transition:background-color .3s,color .15s,box-shadow .3s,opacity 0.3s;
+}
+
+/*
+.cs-opennav{
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user- select:none;
+    user-select:none;
+}
+*/
+.cs-opennav:hover,.cs-closenav:hover{cursor:pointer; opacity:0.8;}
+
+.cs-overlay{
+    position:fixed;
+    display:none;
+    width:100%;
+    height:100%;
+    top:0;left:0;right:0;bottom:0; 
+    background-color:rgba(0,0,0,0.5);
+    z-index:2;
+}
+
+.cs-main{
+    transition:margin-left .4s;
+    margin-left:0;
+    margin-right:0;
+}
+
+
+
+ 
+/* animation ##########################################**/
+.cs-animate-opacity{-webkit-animation:opac 1.5s;animation:opac 1.5s;}
+@-webkit-keyframes opac{from{opacity:0} to{opacity:1}}
+@keyframes opac{from{opacity:0} to{opacity:1}}
+
+
+.cs-card-1{box-shadow:1px 1px 2px 0 rgba(0,0,0,0.4);}
+.cs-card-2{box-shadow:2px 2px 4px 0 rgba(0,0,0,0.4);}
+.cs-card-4{box-shadow:4px 4px 8px 0 rgba(0,0,0,0.4);}
+.cs-card-8{box-shadow:8px 8px 16px 0 rgba(0,0,0,0.4);}
+.cs-card-16{box-shadow:16px 16px 32px 0 rgba(0,0,0,0.4);}
+.cs-card-32{box-shadow:32px 32px 64px 0 rgba(0,0,0,0.4);}
+
+
+
+
+/* font size ##########################################**/
+.cs-font-10{font-size:10px;}
+.cs-font-12{font-size:12px;}
+.cs-font-15{font-size:15px;}
+.cs-font-18{font-size:18px;}
+.cs-font-24{font-size:24px;}
+.cs-font-36{font-size:36px;}
+.cs-font-48{font-size:48px;}
+.cs-font-64{font-size:64px;}
+
+
+
+
+/* color ##########################################**/
+.cs-light-blue{color:#000; background-color:#87CEEB;}
+.cs-light-grey{color:#000; background-color:#f1f1f1;}
+
+
+
+

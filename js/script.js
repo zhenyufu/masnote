@@ -18,8 +18,13 @@ onload = function() {
 
  tinymce.init({
    selector: 'div#mce-main',
-   //fixed_toolbar_container: '#mce-toolbar',
-   height: 1200,
+   /*fixed_toolbar_container: '#mce-toolbar',
+    setup: function (editor) {
+        editor.on('blur', function () {
+            throw new Error('tiny mce hack workaround');
+        });
+    },*/
+   height: 750,
    menubar: false,
    plugins: [
      'advlist autolink lists link image charmap print preview hr anchor pagebreak',
