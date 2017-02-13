@@ -2,7 +2,7 @@
 html,body{height:100%;}
 
 #top-menu {
-    height: 20px;
+    height: 26px;
     background-color: #333;
 position: fixed;
 top:0;
@@ -18,17 +18,17 @@ z-index:9;
 
 #sidebar{
     position:fixed;
-    height: calc(100% - 20px);
+    height: calc(100% - 26px);
     width: 200px;
-    margin-top: 20px;
+    margin-top: 26px;
     background-color:grey;
 }
 
 #mceu_23{
     position:fixed;
     width:  calc(100% - 200px);
-    height: calc(100% - 20px); 
-    margin-top: 20px; 
+    /*height: calc(100% - 26px);*/ 
+    margin-top: 26px; 
      margin-left: 200px;
 
 

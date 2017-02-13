@@ -24,7 +24,7 @@ onload = function() {
             throw new Error('tiny mce hack workaround');
         });
     },*/
-   height: 750,
+   height: 740,
    menubar: false,
    plugins: [
      'advlist autolink lists link image charmap print preview hr anchor pagebreak',
