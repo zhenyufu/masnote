@@ -4,9 +4,11 @@ const {Menu, MenuItem, dialog } = remote;
 const FileSystem = require("fs");
 var exec = require('child_process').exec;
 
-var buttonArrayNewBook, buttonArrayOpenBook, buttonArraySaveBook, buttonArraySaveAll;
+var buttonArrayNewBook, buttonArrayOpenBook, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
 var masContent, masFilePath;
 var mceEditor;
+var workspacePath = "../workspace";
+
 onload = function() {
      
      masContent = document.getElementById("mce-main");
@@ -19,8 +21,10 @@ onload = function() {
     buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
     buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
     buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
+    
+    buttonArraySettings = document.getElementsByClassName("mas-settings");
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
-
+    for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
 
 
@@ -75,9 +79,40 @@ onload = function() {
       });
 
 
+mceEditor.windowManager.open({
+  title: 'Test Container',
+  body: {type: 'textbox', name: 'my_textbox', label  : 'My textbox'},
+  onsubmit: function(e) {alert(e.data.my_textbox)}
+});
+// call ed.focus(); if needed 
+
+
+mceEditor.windowManager.open({
+  title: 'Container',
+  body: [{
+    type: 'container',
+    label  : 'flow',
+    layout: 'flow',
+    items: [
+      {type: 'label', text: 'A container'},
+      {type: 'textbox', label: 'textbox', value: 'with a textbox'},
+      {type: 'textbox', label: 'textboxb', value: 'another  textbox'}
+    ]
+  }]
+});
+
+
+
  }
 
+function handleButtonSettings(){
+    mceEditor.windowManager.open({
+   title: 'Settings',
+   body: {type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
+   onsubmit: function(e) { workspacePath = e.data.masWorkspacePath; }
+ });
 
+}
 
 
 function handleButtonOpenPage() {

@@ -54,6 +54,7 @@ z-index:9;
 
 .menu-item a:hover, .dropdown:hover .dropbtn {
     background-color: grey;
+cursor:pointer;
 }
 
 .menu-item.dropdown {
