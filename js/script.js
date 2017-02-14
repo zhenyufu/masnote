@@ -28,11 +28,13 @@ onload = function() {
     
     buttonArraySettings = document.getElementsByClassName("mas-settings");
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
+    for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
+    //for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
+    
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
-
 getConfig();
-console.log(bookArray);
+//config.delete('bookArray');
 for(var i = 0; i < bookArray.length; i++){ addBookToSidebar( bookArray[i]); }
 }
 
@@ -97,6 +99,10 @@ function getBookPath(bookName){
     return  workspacePath + "/" + bookName;
 }
 
+function getIndexFile(dirPath){
+    return dirPath + "/" + "index.html";
+}
+
 function handleButtonNewBook() {
     setMasContent("");
     mceEditor.windowManager.open({
@@ -112,8 +118,13 @@ function handleButtonNewBook() {
             exec('git init', {cwd: newPath}, function (error, stdout, stderr){
                 console.log("pwd: " + error + " : " + stdout);
             });
+            //empty initial file
+            FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
+                if (err) { console.log("Write failed: " + err); }
+            });
+
         });
-        addNewBook(newName);
+        doOpenBook(newName);
     }// onsubmit
   });
 }
@@ -192,16 +203,21 @@ function setMasFilePath(myFilePath){
     console.log(masFilePath);
 }
 
-function doOpenBook(myPath){
-alert(myPath);
 
+
+function doOpenBook(bookName){
+    if(!bookArray.includes(bookName)){
+        bookArray.push(bookName);
+        addBookToSidebar(bookName);
+    }
+    openBookIndexPage(bookName);
 }
 
-
-function addNewBook(bookName){
-    bookArray.push(bookName);   
-addBookToSidebar(bookName);
-
+function openBookIndexPage(bookName){
+    var p = getIndexFile(getBookPath(bookName));
+    console.log(p);
+    doOpenPage(p);  
+    
 }
 
 
