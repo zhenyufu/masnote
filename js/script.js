@@ -1,20 +1,24 @@
-
 const {remote, clipboard} = require('electron');
 const {Menu, MenuItem, dialog } = remote;
 const FileSystem = require("fs");
 var exec = require('child_process').exec;
+const Config = require('electron-config');
+const config = new Config();
+//config.set('unicorn', 'd');
+//console.log(config.get('unicorn'));
 
 var buttonArrayNewBook, buttonArrayOpenBook, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
-var masContent, masFilePath;
+var masContent, masFilePath,sidebarContent;
 var mceEditor;
-var workspacePath = "../workspace";
 
-onload = function() {
-     
-     masContent = document.getElementById("mce-main");
-     //setMasContent("<b>yo</b>");
-     masFilePath = null;
-    
+var workspacePath;//"../workspace";
+var bookArray = [];
+
+onload = function() {     
+    masContent = document.getElementById("mce-main");
+    //setMasContent("<b>yo</b>");
+    masFilePath = null;
+    sidebarContent =  document.getElementById("sidebar-content");
      //document.getElementById("mas-open-page").addEventListener("click", handleButtonOpenPage); 
 
     buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
@@ -27,10 +31,32 @@ onload = function() {
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
 
-
+getConfig();
+console.log(bookArray);
+for(var i = 0; i < bookArray.length; i++){ addBookToSidebar( bookArray[i]); }
 }
 
- tinymce.init({
+
+window.onbeforeunload = function (e) { 
+    //alert("dd");
+    // set the configs again one last time or only here?     
+setConfig();
+}
+
+
+function getConfig(){
+    workspacePath = config.get("workspacePath");
+    bookArray = config.get("bookArray");
+}
+
+
+function setConfig(){
+    config.set("workspacePath", workspacePath);
+    config.set("bookArray", bookArray);
+}
+
+
+tinymce.init({
    selector: 'div#mce-main',
    /*fixed_toolbar_container: '#mce-toolbar',
     setup: function (editor) {
@@ -67,26 +93,35 @@ onload = function() {
     }
 });
 
+function getBookPath(bookName){
+    return  workspacePath + "/" + bookName;
+}
 
- function handleButtonNewBook() {
-     alert("hi");
-     setMasContent("");
-    // mkdir
-    // git init
-    exec('git status', {cwd: '../test'}, function (error, stdout, stderr){
-          // result
-          console.log("pwd: " + error + " : " + stdout);
-      });
+function handleButtonNewBook() {
+    setMasContent("");
+    mceEditor.windowManager.open({
+    title: 'New book',
+    body: {type: 'textbox', name:"masName", label:"Enter name"},
+    onsubmit: function(e) { 
+        var newName = e.data.masName; 
+        var newPath = getBookPath(newName); 
+        // mkdir 
+        exec('mkdir ' + newName, {cwd: workspacePath}, function (error, stdout, stderr){
+            console.log("pwd: " + error + " : " + stdout);
+            // git init
+            exec('git init', {cwd: newPath}, function (error, stdout, stderr){
+                console.log("pwd: " + error + " : " + stdout);
+            });
+        });
+        addNewBook(newName);
+    }// onsubmit
+  });
+}
 
 
-mceEditor.windowManager.open({
-  title: 'Test Container',
-  body: {type: 'textbox', name: 'my_textbox', label  : 'My textbox'},
-  onsubmit: function(e) {alert(e.data.my_textbox)}
-});
 // call ed.focus(); if needed 
 
-
+/*
 mceEditor.windowManager.open({
   title: 'Container',
   body: [{
@@ -100,10 +135,9 @@ mceEditor.windowManager.open({
     ]
   }]
 });
+*/
 
 
-
- }
 
 function handleButtonSettings(){
     mceEditor.windowManager.open({
@@ -162,3 +196,30 @@ function doOpenBook(myPath){
 alert(myPath);
 
 }
+
+
+function addNewBook(bookName){
+    bookArray.push(bookName);   
+addBookToSidebar(bookName);
+
+}
+
+
+function addBookToSidebar(bookName){
+    var li = document.createElement('li');
+    //
+    var i = document.createElement('i');
+    i.className = "fa fa-book";
+    li.appendChild(i);
+    //
+    var linkText = document.createTextNode ( " " + bookName);
+    li.appendChild(linkText);
+        //a.title = bookName;
+    //a.href = "http://example.com";
+    sidebarContent.appendChild(li);   
+    console.log("add book");
+
+}
+
+
+

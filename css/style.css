@@ -21,7 +21,17 @@ z-index:9;
     height: calc(100% - 26px);
     width: 200px;
     margin-top: 26px;
-    background-color:grey;
+    background-color:#eaeaea;
+}
+
+#sidebar a{
+
+cursor:pointer;
+}
+
+#sidebar ul{
+padding-left: 10px;
+
 }
 
 #mceu_23{

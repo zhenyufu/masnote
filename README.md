@@ -1,1 +1,1 @@
-# masnoterun `npm install` to install dependencies
+# masnoterun `npm install` to install dependencies#wget http://fontawesome.io/assets/font-awesome-4.7.0.zipnpm install electron-config

@@ -15,6 +15,7 @@ function createWindow () {
     
     mainWindow.on("closed", function () {
         mainWindow = null;
+        //config.set('winBounds', win.getBounds())
     });
 };
 
