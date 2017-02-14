@@ -7,12 +7,14 @@ const config = new Config();
 //config.set('unicorn', 'd');
 //console.log(config.get('unicorn'));
 
-var buttonArrayNewBook, buttonArrayOpenBook, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
+var buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
 var masContent, masFilePath,sidebarContent;
 var mceEditor;
 
 var workspacePath;//"../workspace";
 var bookArray = [];
+// array of book objects 
+// with book name and full path 
 
 onload = function() {     
     masContent = document.getElementById("mce-main");
@@ -23,17 +25,21 @@ onload = function() {
 
     buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
     buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
+    buttonArrayOpenPage = document.getElementsByClassName("mas-open-page");
+
     buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
     buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
     
     buttonArraySettings = document.getElementsByClassName("mas-settings");
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
     for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
+    for(var i = 0; i < buttonArrayOpenPage.length; i++){ buttonArrayOpenPage.item(i).addEventListener("click", handleButtonOpenPage); }
     //for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
     
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
 getConfig();
+//config.clear();
 //config.delete('bookArray');
 for(var i = 0; i < bookArray.length; i++){ addBookToSidebar( bookArray[i]); }
 }
@@ -122,9 +128,9 @@ function handleButtonNewBook() {
             FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
                 if (err) { console.log("Write failed: " + err); }
             });
+        doOpenBook(newPath);
 
         });
-        doOpenBook(newName);
     }// onsubmit
   });
 }
@@ -203,25 +209,33 @@ function setMasFilePath(myFilePath){
     console.log(masFilePath);
 }
 
+function getBookNameFromPath(bookPath){
+    var temp = bookPath.split("/");
+    return temp[temp.length - 1];
 
-
-function doOpenBook(bookName){
-    if(!bookArray.includes(bookName)){
-        bookArray.push(bookName);
-        addBookToSidebar(bookName);
-    }
-    openBookIndexPage(bookName);
 }
 
-function openBookIndexPage(bookName){
-    var p = getIndexFile(getBookPath(bookName));
+
+
+function doOpenBook(bookPath){
+    if(!bookArray.includes(bookPath)){
+        bookArray.push(bookPath);
+        addBookToSidebar(bookPath);
+    }
+    openBookIndexPage(bookPath);
+}
+
+function openBookIndexPage(bookPath){
+    var p = getIndexFile(bookPath);
     console.log(p);
     doOpenPage(p);  
     
 }
 
 
-function addBookToSidebar(bookName){
+function addBookToSidebar(bookPath){
+    var bookName = getBookNameFromPath(bookPath);
+    
     var li = document.createElement('li');
     //
     var i = document.createElement('i');
