@@ -8,7 +8,8 @@ function myFunction(name) {
 
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(e) {
-  if (!e.target.matches('.dropbtn')) {
+    //console.log(e.target);
+    if (!e.target.matches('.dropbtn')) {
     closeDropdown();
   }
 }

@@ -9,7 +9,7 @@ const Path = require('path');
 //config.set('unicorn', 'd');
 //console.log(config.get('unicorn'));
 
-var buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
+var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
 var masContent, masFilePath, masCurrentBookIndex, sidebarContent;
 var mceEditor;
 
@@ -39,6 +39,7 @@ onload = function() {
     masFilePath = null;
     sidebarContent =  document.getElementById("sidebar-content");
      //document.getElementById("mas-open-page").addEventListener("click", handleButtonOpenPage); 
+    buttonArrayNewPage = document.getElementsByClassName("mas-new-page");
 
     buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
     buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
@@ -48,6 +49,8 @@ onload = function() {
     //buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
     
     buttonArraySettings = document.getElementsByClassName("mas-settings");
+    for(var i = 0; i < buttonArrayNewPage.length; i++){ buttonArrayNewPage.item(i).addEventListener("click", handleButtonNewPage); }
+
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
     for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
     //for(var i = 0; i < buttonArrayOpenPage.length; i++){ buttonArrayOpenPage.item(i).addEventListener("click", handleButtonOpenPage); }
@@ -67,7 +70,7 @@ getConfig();
         if (bookArray.length > 0){
             console.log("reloding last book at index" + masCurrentBookIndex.toString());
             //doOpenBook(bookArray[masCurrentBookIndex]);
-            openBookIndexPage(bookArray[masCurrentBookIndex]); // open the last book index page for now 
+            openBookIndexPage(getCurrentBook()); // open the last book index page for now 
         }
 
 
@@ -141,8 +144,39 @@ function getIndexFile(dirPath){
     return dirPath + "/" + "index.html";
 }
 
+function getCurrentBook(){
+    return bookArray[masCurrentBookIndex];
+}
+
+
+function handleButtonNewPage(){
+     setMasContent("");
+     mceEditor.windowManager.open({
+     title: 'New Page',
+     body: {type: 'textbox', name:"masName", label:"Enter name"},
+     onsubmit: function(e) {
+         var newName = e.data.masName;
+         var newPath = getCurrentBook().getPath();
+         // mkdir 
+         exec('cd ' + newPath, function (error, stdout, stderr){
+             console.log("pwd: " + error + " : " + stdout);
+             FileSystem.writeFile(newPath + "/" + newName + ".html", " ", function (err) {
+                 if (err) { console.log("Write failed: " + err); }
+             });
+             doOpenPage(getPageOfBook(newName, getCurrentBook()));
+         });
+     }// onsubmit
+   });
+
+
+}
+
+
+function getPageOfBook(pageName, book){
+    return book.getPath() + "/" + pageName + ".html";
+}
+
 function handleButtonNewBook() {
-    setMasContent("");
     mceEditor.windowManager.open({
     title: 'New book',
     body: {type: 'textbox', name:"masName", label:"Enter name"},
@@ -163,6 +197,8 @@ function handleButtonNewBook() {
             //success 
             var b = new Book(newPath);
             //bookArray.push(b);
+            
+            setMasContent("");
             doOpenBook(b);
 
         });
