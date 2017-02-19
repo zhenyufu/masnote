@@ -10,7 +10,7 @@ const Path = require('path');
 //console.log(config.get('unicorn'));
 
 var buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
-var masContent, masFilePath,sidebarContent;
+var masContent, masFilePath, masCurrentBookIndex, sidebarContent;
 var mceEditor;
 
 var workspacePath;//"../workspace";
@@ -58,29 +58,41 @@ onload = function() {
 getConfig();
 //config.clear();
 //config.delete('bookArray');
-for(var i = 0; i < bookArray.length; i++){ 
-    var temp = bookArray[i];
-    bookArray[i] = new Book(temp.path);
-    addBookToSidebar( bookArray[i]); }
-}
+        for(var i = 0; i < bookArray.length; i++){ 
+            var temp = bookArray[i];
+            bookArray[i] = new Book(temp.path);
+            addBookToSidebar( bookArray[i]); 
+        }
 
+        if (bookArray.length > 0){
+            console.log("reloding last book at index" + masCurrentBookIndex.toString());
+            //doOpenBook(bookArray[masCurrentBookIndex]);
+            openBookIndexPage(bookArray[masCurrentBookIndex]); // open the last book index page for now 
+        }
+
+
+}
 
 window.onbeforeunload = function (e) { 
     //alert("dd");
     // set the configs again one last time or only here?     
 setConfig();
+doSaveToFile(mceEditor.getContent(), masFilePath);
 }
 
 
 function getConfig(){
-    workspacePath = config.get("workspacePath");
-    bookArray = config.get("bookArray");
+    workspacePath = config.get("workspacePath") || "";
+    bookArray = config.get("bookArray") || bookArray;
+    masCurrentBookIndex = config.get("masCurrentBookIndex") || -1;
 }
+
 
 
 function setConfig(){
     config.set("workspacePath", workspacePath);
     config.set("bookArray", bookArray);
+    config.set("masCurrentBookIndex", masCurrentBookIndex);
 }
 
 
@@ -197,15 +209,22 @@ function handleButtonOpenBook() {
     dialog.showOpenDialog({properties:  ['openDirectory']}, function(myPath) { if(myPath) {var b = new Book(myPath[0]); doOpenBook(b);} });
 }
 
-function handleButtonSave() {
-    if (masFilePath) {
-        doSaveToCurrentFile(masFilePath);
-    } 
-    else {
-        dialog.showSaveDialog(function(myPath) { doSaveToNewFile(myPath.toString()); });
-    }
+function handleButtonSaveBook() {
+    // write editor to current file path 
+    doSaveToFile(mceEditor.getContent(), masFilePath);
+    //mceEditor.getContent();
 }
 
+
+
+function doSaveToFile(stuff, path){
+
+FileSystem.writeFile(path, stuff, function (err) {
+        if (err) { console.log("Write failed: " + err); }
+
+    });
+
+}
 
 function doFileNew(myPath){
     setMasFilePath(null);
@@ -238,14 +257,29 @@ function getBookNameFromPath(bookPath){
 
 }
 
+function findBookIndex(book) {
+    for(var i = 0; i < bookArray.length; i += 1) {
+        if(bookArray[i].getName() == book.getName()) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 
 function doOpenBook(book){
-    if(!bookArray.includes(book)){
+    // if the book is not in the array add the book
+    if( findBookIndex(book) == -1 ){
+   console.log("book not in the array"); 
         bookArray.push(book);
         addBookToSidebar(book);
-    }
+    masCurrentBookIndex = findBookIndex(book);
+    
+    console.log(masCurrentBookIndex);
     openBookIndexPage(book);
+    }else{
+    console.log("book is already in the array");
+    }
 }
 
 function openBookIndexPage(book){
