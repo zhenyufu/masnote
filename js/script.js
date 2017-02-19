@@ -42,16 +42,16 @@ onload = function() {
 
     buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
     buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
-    buttonArrayOpenPage = document.getElementsByClassName("mas-open-page");
+    //buttonArrayOpenPage = document.getElementsByClassName("mas-open-page");
 
     buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
-    buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
+    //buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
     
     buttonArraySettings = document.getElementsByClassName("mas-settings");
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
     for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
-    for(var i = 0; i < buttonArrayOpenPage.length; i++){ buttonArrayOpenPage.item(i).addEventListener("click", handleButtonOpenPage); }
-    //for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
+    //for(var i = 0; i < buttonArrayOpenPage.length; i++){ buttonArrayOpenPage.item(i).addEventListener("click", handleButtonOpenPage); }
+    for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
     
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
