@@ -110,7 +110,7 @@ tinymce.init({
      'advlist autolink lists link image charmap print preview hr anchor pagebreak',
      'searchreplace wordcount visualblocks visualchars code fullscreen',
      'insertdatetime media nonbreaking save table contextmenu directionality',
-     'emoticons template paste textcolor colorpicker textpattern imagetools codesample     toc'
+     'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
    ],
    toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter       alignright alignjustify | bullist numlist outdent indent | link image',
    toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
@@ -276,10 +276,10 @@ function doOpenBook(book){
     masCurrentBookIndex = findBookIndex(book);
     
     console.log(masCurrentBookIndex);
-    openBookIndexPage(book);
     }else{
     console.log("book is already in the array");
     }
+    openBookIndexPage(book); //////////////////////////////////////////////should be here right : open either way
 }
 
 function openBookIndexPage(book){
