@@ -4,6 +4,8 @@ const FileSystem = require("fs");
 var exec = require('child_process').exec;
 const Config = require('electron-config');
 const config = new Config();
+const Path = require('path');
+
 //config.set('unicorn', 'd');
 //console.log(config.get('unicorn'));
 
@@ -16,8 +18,8 @@ var bookArray = [];
 // array of book objects 
 // with book name and full path 
 
-function Book (name,path) {
-    this.name = name;
+function Book (path) {
+    this.name = Path.parse(path).base;
     this.path = path;
     this.upstream = "";
     this.getName = function(){return this.name;};
@@ -58,7 +60,7 @@ getConfig();
 //config.delete('bookArray');
 for(var i = 0; i < bookArray.length; i++){ 
     var temp = bookArray[i];
-    bookArray[i] = new Book(temp.name, temp.path);
+    bookArray[i] = new Book(temp.path);
     addBookToSidebar( bookArray[i]); }
 }
 
@@ -147,7 +149,7 @@ function handleButtonNewBook() {
                 if (err) { console.log("Write failed: " + err); }
             });
             //success 
-            var b = new Book(newName, newPath);
+            var b = new Book(newPath);
             //bookArray.push(b);
             doOpenBook(b);
 
@@ -188,11 +190,11 @@ function handleButtonSettings(){
 
 
 function handleButtonOpenPage() {
-    dialog.showOpenDialog({properties: ['openFile']}, function(myPath) { doOpenPage(myPath.toString()); });
+    dialog.showOpenDialog({properties: ['openFile']}, function(myPath) { if(myPath) {doOpenPage(myPath.toString()); } });
 }
 
 function handleButtonOpenBook() {
-    dialog.showOpenDialog({properties: ['openiFile']}, function(myPath) { doOpenBook(myPath.toString()); });
+    dialog.showOpenDialog({properties:  ['openDirectory']}, function(myPath) { if(myPath) {var b = new Book(myPath[0]); doOpenBook(b);} });
 }
 
 function handleButtonSave() {
@@ -239,7 +241,6 @@ function getBookNameFromPath(bookPath){
 
 
 function doOpenBook(book){
-
     if(!bookArray.includes(book)){
         bookArray.push(book);
         addBookToSidebar(book);
@@ -258,10 +259,13 @@ function openBookIndexPage(book){
 function makeFont(name){
     var i  = document.createElement('i');
     i.className = "fa fa-" + name;
+    addCssClass(i,"cs-padding-2");//i.className += " cs-padding-2";
     return i;
 }
 
-
+function addCssClass(ele, str){
+    ele.className += (" " + str);
+}
 
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
@@ -276,8 +280,13 @@ function addBookToSidebar(book){
     //a.href = "http://example.com";
     
     //fa-refresh
-    li.appendChild(makeFont("refresh"));
-    li.appendChild(makeFont("caret-down"));
+    var font = makeFont("refresh");
+    addCssClass(font, "cs-right");
+    li.appendChild(font);
+    //
+    font = makeFont("caret-down");
+    addCssClass(font, "cs-right");
+    li.appendChild(font);
 
     sidebarContent.appendChild(li);   
     console.log("add book");
