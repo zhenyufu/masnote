@@ -29,9 +29,13 @@ z-index:9;
 cursor:pointer;
 }
 
-#sidebar ul{
-padding-left: 10px;
+a {
+cursor:pointer;
 
+}
+#sidebar ul{
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 #mceu_23{

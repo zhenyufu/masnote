@@ -306,10 +306,17 @@ function addBookToSidebar(book){
     
     var li = document.createElement('li');
     //fa-book
-    li.appendChild(makeFont("book"));
-    //
+    var book = makeFont("book");
+    var a = document.createElement('a');
+    a.appendChild(book)
+    
     var linkText = document.createTextNode ( " " + bookName);
-    li.appendChild(linkText);
+    a.appendChild(linkText);
+
+
+    li.appendChild(a);
+    //
+    //li.appendChild(linkText);
         //a.title = bookName;
     //a.href = "http://example.com";
     
