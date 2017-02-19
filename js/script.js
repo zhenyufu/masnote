@@ -16,6 +16,21 @@ var bookArray = [];
 // array of book objects 
 // with book name and full path 
 
+function Book (name,path) {
+    this.name = name;
+    this.path = path;
+    this.upstream = "";
+    this.getName = function(){return this.name;};
+    this.getPath = function(){return this.path;};
+    this.getUpstream = function(){return this.Upstream;};
+    this.getIndexFile = function(){return this.path + "/" + "index.html";};
+
+}
+ 
+
+
+
+
 onload = function() {     
     masContent = document.getElementById("mce-main");
     //setMasContent("<b>yo</b>");
@@ -41,7 +56,10 @@ onload = function() {
 getConfig();
 //config.clear();
 //config.delete('bookArray');
-for(var i = 0; i < bookArray.length; i++){ addBookToSidebar( bookArray[i]); }
+for(var i = 0; i < bookArray.length; i++){ 
+    var temp = bookArray[i];
+    bookArray[i] = new Book(temp.name, temp.path);
+    addBookToSidebar( bookArray[i]); }
 }
 
 
@@ -128,7 +146,10 @@ function handleButtonNewBook() {
             FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
                 if (err) { console.log("Write failed: " + err); }
             });
-        doOpenBook(newPath);
+            //success 
+            var b = new Book(newName, newPath);
+            //bookArray.push(b);
+            doOpenBook(b);
 
         });
     }// onsubmit
@@ -217,35 +238,47 @@ function getBookNameFromPath(bookPath){
 
 
 
-function doOpenBook(bookPath){
-    if(!bookArray.includes(bookPath)){
-        bookArray.push(bookPath);
-        addBookToSidebar(bookPath);
+function doOpenBook(book){
+
+    if(!bookArray.includes(book)){
+        bookArray.push(book);
+        addBookToSidebar(book);
     }
-    openBookIndexPage(bookPath);
+    openBookIndexPage(book);
 }
 
-function openBookIndexPage(bookPath){
-    var p = getIndexFile(bookPath);
+function openBookIndexPage(book){
+    var p = book.getIndexFile();//getIndexFile(book);
     console.log(p);
     doOpenPage(p);  
     
 }
 
 
-function addBookToSidebar(bookPath){
-    var bookName = getBookNameFromPath(bookPath);
+function makeFont(name){
+    var i  = document.createElement('i');
+    i.className = "fa fa-" + name;
+    return i;
+}
+
+
+
+function addBookToSidebar(book){
+    var bookName = book.getName();//getBookNameFromPath(bookPath);
     
     var li = document.createElement('li');
-    //
-    var i = document.createElement('i');
-    i.className = "fa fa-book";
-    li.appendChild(i);
+    //fa-book
+    li.appendChild(makeFont("book"));
     //
     var linkText = document.createTextNode ( " " + bookName);
     li.appendChild(linkText);
         //a.title = bookName;
     //a.href = "http://example.com";
+    
+    //fa-refresh
+    li.appendChild(makeFont("refresh"));
+    li.appendChild(makeFont("caret-down"));
+
     sidebarContent.appendChild(li);   
     console.log("add book");
 
