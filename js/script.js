@@ -114,6 +114,7 @@ tinymce.init({
         });
     },*/
    height: 740,
+   resize: false,
    menubar: false,
    plugins: [
      'advlist autolink lists link image charmap print preview hr anchor pagebreak',
@@ -233,6 +234,14 @@ mceEditor.windowManager.open({
 });
 */
 
+  window.addEventListener('resize', function(e){
+      e.preventDefault();
+      myWidth = window.innerWidth;
+        myHeight = window.innerHeight;
+       mceEditor.theme.resizeTo (myWidth - 200, myHeight - 130); ///////////////////////////height resize is hardcoded  
+
+        
+    });
 
 
 function handleButtonSettings(){
