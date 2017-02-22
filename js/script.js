@@ -310,6 +310,7 @@ function doFileNew(myPath){
 function doOpenPage(myPath){
     FileSystem.readFile(myPath, function (err, data) {
         if (err) { console.log("Read error: " + err); }
+        handleButtonSaveBook();////////////////////////////////////saves the current first
         setMasContent(String(data));
         setMasFilePath(myPath);
         //do not add if it is index.html file
@@ -370,6 +371,7 @@ function doOpenBook(book){
 function openBookIndexPage(book){
     var p = book.getIndexFile();//getIndexFile(book);
     console.log(p);
+    setMasFilePath(getCurrentBook().getIndexFile());
     doOpenPage(p);  
     
 }
