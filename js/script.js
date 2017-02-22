@@ -171,7 +171,9 @@ function handleButtonNewPage(){
                  if (err) { console.log("Write failed: " + err); }
              });
              doOpenPage(getPageOfBook(newName, getCurrentBook()));
-            ////////////////////
+                var pageListEle = getPageListEle(getCurrentBook());
+             addPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle);
+             ////////////////////
 
          });
      }// onsubmit
@@ -310,10 +312,12 @@ function doOpenPage(myPath){
         setMasContent(String(data));
         setMasFilePath(myPath);
         //do not add if it is index.html file
+        /*
         if(Path.basename(myPath) != "index.html"){
             var pageListEle = getPageListEle(getCurrentBook());
             addPageToSidebar(myPath, pageListEle);
         }
+        */
     });
 }
 
