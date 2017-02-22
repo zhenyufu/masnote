@@ -72,8 +72,14 @@ config.clear();
             //doOpenBook(bookArray[masCurrentBookIndex]);
             openBookIndexPage(getCurrentBook()); // open the last book index page for now 
         }
-
-
+/*
+        //
+        var  downArray = document.getElementsByClassName("down-arrow");
+        for(var i = 0; i < downArray.length; i++){ 
+            downArray.item(i).addEventListener("click", handleActionDownArrowi(e)); 
+        
+        }
+*/
 }
 
 window.onbeforeunload = function (e) { 
@@ -270,7 +276,9 @@ function handleButtonSaveBook() {
     //mceEditor.getContent();
 }
 
-
+function handleActionDownArrow(e){
+    alert(e.target.id);
+}
 
 function doSaveToFile(stuff, path){
 
@@ -366,7 +374,7 @@ function removeExtension(file){
 }
 
 function addPagesToSidebar(book){
-    var bookEle = document.getElementById(book.getName());
+    var bookEle = document.getElementById("display-" + book.getName() + "-pageList");
     console.log("haaaaaaaa " + book.pageArray.length); 
     for (var i = 0; i < book.pageArray.length; i++){
         console.log(book.pageArray[i]);
@@ -379,14 +387,17 @@ function addPagesToSidebar(book){
         a.appendChild(linkText);
 
         pageEle.appendChild(a);
-        insertAfter(pageEle,bookEle);
+        //insertAfter(pageEle,bookEle);
+        bookEle.appendChild(pageEle);
 
         //bookEle.appendChild(pageEle)
     }
    
 }
 
-
+function setElementId(ele,type,bookName,thing ){
+    ele.id = type + "-" + bookName + "-" +  thing;
+}
 
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
@@ -414,8 +425,29 @@ function addBookToSidebar(book){
     li.appendChild(font);
     //
     font = makeFont("caret-down");
-    addCssClass(font, "cs-right");
+    setElementId(font, "action", bookName, "down");
+    addCssClass(font, "cs-right down-arrow");
+    font.addEventListener("click", function() { 
+        var pList = document.getElementById("display-" + bookName + "-pageList");
+        //pList.classList.toggle("show");
+        console.log(pList);
+        toggleShowHide(pList);
+        /*
+        for(i=0; i<pList.length; i+=1) {
+            //alert(nodes[i]);
+            console.log(pList[i]);
+            toggleShowHide(pList[i]);
+        }
+*/
+        //toggleShowHide(pList);
+    });
+
     li.appendChild(font);
+    //the list 
+    var pList = document.createElement('div');
+    setElementId(pList, "display", bookName, "pageList");
+    li.appendChild(pList);
+
 
     sidebarContent.appendChild(li);   
     console.log("add book");
@@ -424,5 +456,13 @@ function addBookToSidebar(book){
 
 }
 
+function toggleShowHide(ele){
+    if (ele.style.display !== 'none') {
+        ele.style.display = 'none';
+    }
+    else {
+        ele.style.display = 'block';
+    }
 
+}
 
