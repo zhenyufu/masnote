@@ -251,7 +251,9 @@ function handleButtonOpenBook() {
             FileSystem.readdir(myPath, (err, dir) => { //readDir(myPath, function(dir) {
                 for(let filePath of dir) {
                     //console.log(filePath);
+                    if (filePath != ".git" && filePath != "index.html"){
                     b.pageArray.push(filePath);
+                    }
                 }
 
                     doOpenBook(b);
@@ -359,6 +361,10 @@ function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
+function removeExtension(file){
+   return Path.parse(file).name; 
+}
+
 function addPagesToSidebar(book){
     var bookEle = document.getElementById(book.getName());
     console.log("haaaaaaaa " + book.pageArray.length); 
@@ -369,7 +375,7 @@ function addPagesToSidebar(book){
         var pg = makeFont("file-o");
         var a = document.createElement('a');
         a.appendChild(pg)
-        var linkText = document.createTextNode ( " " + book.pageArray[i]);
+        var linkText = document.createTextNode ( " " + removeExtension(book.pageArray[i]) );
         a.appendChild(linkText);
 
         pageEle.appendChild(a);
