@@ -170,6 +170,8 @@ function handleButtonNewPage(){
                  if (err) { console.log("Write failed: " + err); }
              });
              doOpenPage(getPageOfBook(newName, getCurrentBook()));
+            ////////////////////
+
          });
      }// onsubmit
    });
@@ -298,6 +300,11 @@ function doOpenPage(myPath){
         if (err) { console.log("Read error: " + err); }
         setMasContent(String(data));
         setMasFilePath(myPath);
+        //do not add if it is index.html file
+        if(Path.basename(myPath) != "index.html"){
+            var pageListEle = getPageListEle(getCurrentBook());
+            addPageToSidebar(myPath, pageListEle);
+        }
     });
 }
 
@@ -373,24 +380,34 @@ function removeExtension(file){
    return Path.parse(file).name; 
 }
 
-function addPagesToSidebar(book){
-    var bookEle = document.getElementById("display-" + book.getName() + "-pageList");
-    console.log("haaaaaaaa " + book.pageArray.length); 
-    for (var i = 0; i < book.pageArray.length; i++){
-        console.log(book.pageArray[i]);
+//myPath is full path
+function addPageToSidebar(myPath, pageListEle){
+        
         var pageEle = document.createElement('li');
         addCssClass(pageEle, "left-pad-8");
         var pg = makeFont("file-o");
         var a = document.createElement('a');
         a.appendChild(pg)
-        var linkText = document.createTextNode ( " " + removeExtension(book.pageArray[i]) );
+        var linkText = document.createTextNode ( " " + removeExtension(Path.basename(myPath)) );
         a.appendChild(linkText);
 
         pageEle.appendChild(a);
         //insertAfter(pageEle,bookEle);
-        bookEle.appendChild(pageEle);
+        pageListEle.appendChild(pageEle);
+}
 
+function getPageListEle(book){
+    return document.getElementById("display-" + book.getName() + "-pageList");
+}
+
+function addPagesToSidebar(book){
+    var pageListEle = getPageListEle(book); //document.getElementById("display-" + book.getName() + "-pageList");
+    console.log(book.pageArray);
+    for (var i = 0; i < book.pageArray.length; i++){
         //bookEle.appendChild(pageEle)
+        var myPath = book + "/" + book.pageArray[i];
+        addPageToSidebar(myPath, pageListEle);   
+    
     }
    
 }
@@ -398,6 +415,7 @@ function addPagesToSidebar(book){
 function setElementId(ele,type,bookName,thing ){
     ele.id = type + "-" + bookName + "-" +  thing;
 }
+
 
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
