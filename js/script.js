@@ -13,6 +13,7 @@ var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpen
 var masContent, masFilePath, masCurrentBookIndex, sidebarContent;
 var mceEditor;
 
+
 var workspacePath;//"../workspace";
 var bookArray = [];
 // array of book objects 
@@ -172,7 +173,7 @@ function handleButtonNewPage(){
              });
              doOpenPage(getPageOfBook(newName, getCurrentBook()));
                 var pageListEle = getPageListEle(getCurrentBook());
-             addPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle);
+             addPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
              ////////////////////
 
          });
@@ -393,12 +394,13 @@ function removeExtension(file){
    return Path.parse(file).name; 
 }
 
-
 //myPath is full path
-function addPageToSidebar(myPath, pageListEle){
+function addPageToSidebar(myPath, pageListEle, book){
         
         var pageEle = document.createElement('li');
         addCssClass(pageEle, "left-pad-8");
+        setElementId(pageEle, "page", book.getName(), removeExtension(Path.basename(myPath)));
+
         var pg = makeFont("file-o");
         var a = document.createElement('a');
         a.appendChild(pg)
@@ -421,7 +423,7 @@ function addPagesToSidebar(book){
     for (var i = 0; i < book.pageArray.length; i++){
         //bookEle.appendChild(pageEle)
         var myPath = book.getPath() + "/" + book.pageArray[i];
-        addPageToSidebar(myPath, pageListEle);   
+        addPageToSidebar(myPath, pageListEle, book);   
     
     }
    
@@ -434,16 +436,35 @@ function setElementId(ele,type,bookName,thing ){
 function setClickOpenPage(ele, path){
     ele.addEventListener("click", function() {
      doOpenPage(path);
- 
-     });
+        // change the last current page color  
+        var pName = removeExtension(Path.basename(masFilePath));
+        pId = "";
+
+        if (pName == "index"){
+            pId = "book-" + getCurrentBook().getName() + "-" + pName;
+        }
+        else{
+            pId = "page-" + getCurrentBook().getName() + "-" + pName;
+        }
+
+        
+        console.log(pId);
+        var pLi = document.getElementById(pId)
+        if(pLi){
+            pLi.style.backgroundColor = "inherit";
+            // set the new one 
+            ele.parentNode.style.backgroundColor = "#cecece"; 
+        }
+    });
 
 
 }
+
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
     var li = document.createElement('li');
-    li.id = bookName;
+    li.id = "book-" + bookName + "-index";
     //fa-book
     var bk = makeFont("book");
     var a = document.createElement('a');
