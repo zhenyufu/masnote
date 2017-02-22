@@ -10,7 +10,7 @@ const Path = require('path');
 //console.log(config.get('unicorn'));
 
 var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
-var masContent, masFilePath, masCurrentBookIndex, sidebarContent;
+var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
 
 
@@ -250,7 +250,9 @@ mceEditor.windowManager.open({
 function handleButtonSettings(){
     mceEditor.windowManager.open({
    title: 'Settings',
-   body: {type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
+   body: [{type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
+    {type: 'textbox', name: 'serverAddress', label:"Sever Address", value: masServerAddress},
+    ],
    onsubmit: function(e) { workspacePath = e.data.masWorkspacePath; }
  });
 
