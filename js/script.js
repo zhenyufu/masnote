@@ -393,6 +393,7 @@ function removeExtension(file){
    return Path.parse(file).name; 
 }
 
+
 //myPath is full path
 function addPageToSidebar(myPath, pageListEle){
         
@@ -403,6 +404,7 @@ function addPageToSidebar(myPath, pageListEle){
         a.appendChild(pg)
         var linkText = document.createTextNode ( " " + removeExtension(Path.basename(myPath)) );
         a.appendChild(linkText);
+        setClickOpenPage(a, myPath);
 
         pageEle.appendChild(a);
         //insertAfter(pageEle,bookEle);
@@ -418,7 +420,7 @@ function addPagesToSidebar(book){
     console.log(book.pageArray);
     for (var i = 0; i < book.pageArray.length; i++){
         //bookEle.appendChild(pageEle)
-        var myPath = book + "/" + book.pageArray[i];
+        var myPath = book.getPath() + "/" + book.pageArray[i];
         addPageToSidebar(myPath, pageListEle);   
     
     }
@@ -429,7 +431,14 @@ function setElementId(ele,type,bookName,thing ){
     ele.id = type + "-" + bookName + "-" +  thing;
 }
 
+function setClickOpenPage(ele, path){
+    ele.addEventListener("click", function() {
+     doOpenPage(path);
+ 
+     });
 
+
+}
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
@@ -442,7 +451,14 @@ function addBookToSidebar(book){
     
     var linkText = document.createTextNode ( " " + bookName);
     a.appendChild(linkText);
+    //a.masLink = book.getIndexFile(); 
+    /*
+    a.addEventListener("click", function() {
+    doOpenPage(book.getIndexFile() );
 
+    });
+    */
+    setClickOpenPage(a, book.getIndexFile());
 
     li.appendChild(a);
     //
