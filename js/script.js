@@ -26,7 +26,7 @@ function Book (path) {
     this.getPath = function(){return this.path;};
     this.getUpstream = function(){return this.Upstream;};
     this.getIndexFile = function(){return this.path + "/" + "index.html";};
-
+    this.pageArray = [];
 }
  
 
@@ -58,8 +58,8 @@ onload = function() {
     
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
-getConfig();
-//config.clear();
+//getConfig();
+config.clear();
 //config.delete('bookArray');
         for(var i = 0; i < bookArray.length; i++){ 
             var temp = bookArray[i];
@@ -242,7 +242,24 @@ function handleButtonOpenPage() {
 }
 
 function handleButtonOpenBook() {
-    dialog.showOpenDialog({properties:  ['openDirectory']}, function(myPath) { if(myPath) {var b = new Book(myPath[0]); doOpenBook(b);} });
+    dialog.showOpenDialog({properties:  ['openDirectory']}, function(myPath) { 
+        myPath = myPath[0];
+        if(myPath) {
+            //
+            var b = new Book(myPath); 
+            // iterate the pages and give that to b
+            FileSystem.readdir(myPath, (err, dir) => { //readDir(myPath, function(dir) {
+                for(let filePath of dir) {
+                    //console.log(filePath);
+                    b.pageArray.push(filePath);
+                }
+
+                    doOpenBook(b);
+            });
+
+
+        } 
+    });
 }
 
 function handleButtonSaveBook() {
@@ -306,15 +323,16 @@ function findBookIndex(book) {
 function doOpenBook(book){
     // if the book is not in the array add the book
     if( findBookIndex(book) == -1 ){
-   console.log("book not in the array"); 
+        console.log("book not in the array"); 
         bookArray.push(book);
         addBookToSidebar(book);
-    masCurrentBookIndex = findBookIndex(book);
-    
-    console.log(masCurrentBookIndex);
-    }else{
-    console.log("book is already in the array");
+        masCurrentBookIndex = findBookIndex(book);
+        console.log(masCurrentBookIndex);
     }
+    else{
+        console.log("book is already in the array");
+    }
+    //addPagesToSidebar(book);
     openBookIndexPage(book); //////////////////////////////////////////////should be here right : open either way
 }
 
@@ -337,14 +355,42 @@ function addCssClass(ele, str){
     ele.className += (" " + str);
 }
 
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+function addPagesToSidebar(book){
+    var bookEle = document.getElementById(book.getName());
+    console.log("haaaaaaaa " + book.pageArray.length); 
+    for (var i = 0; i < book.pageArray.length; i++){
+        console.log(book.pageArray[i]);
+        var pageEle = document.createElement('li');
+        addCssClass(pageEle, "left-pad-8");
+        var pg = makeFont("file-o");
+        var a = document.createElement('a');
+        a.appendChild(pg)
+        var linkText = document.createTextNode ( " " + book.pageArray[i]);
+        a.appendChild(linkText);
+
+        pageEle.appendChild(a);
+        insertAfter(pageEle,bookEle);
+
+        //bookEle.appendChild(pageEle)
+    }
+   
+}
+
+
+
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
     var li = document.createElement('li');
+    li.id = bookName;
     //fa-book
-    var book = makeFont("book");
+    var bk = makeFont("book");
     var a = document.createElement('a');
-    a.appendChild(book)
+    a.appendChild(bk)
     
     var linkText = document.createTextNode ( " " + bookName);
     a.appendChild(linkText);
@@ -367,6 +413,8 @@ function addBookToSidebar(book){
 
     sidebarContent.appendChild(li);   
     console.log("add book");
+
+    addPagesToSidebar(book);
 
 }
 
