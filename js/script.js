@@ -14,7 +14,7 @@ var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarConte
 var mceEditor;
 
 
-var workspacePath;//"../workspace";
+var workspacePath = "../workspace";
 var bookArray = [];
 // array of book objects 
 // with book name and full path 
@@ -273,7 +273,7 @@ function handleButtonOpenBook() {
             FileSystem.readdir(myPath, (err, dir) => { //readDir(myPath, function(dir) {
                 for(let filePath of dir) {
                     //console.log(filePath);
-                    if (filePath != ".git" && filePath != "index.html"){
+                    if (filePath != ".git" && filePath != "index.html" && Path.extname(filePath) == ".html" ){
                     b.pageArray.push(filePath);
                     }
                 }
@@ -452,7 +452,7 @@ function setClickOpenPage(ele, path){
         }
 
         
-        console.log(pId);
+        console.log(path);
         var pLi = document.getElementById(pId)
         if(pLi){
             pLi.style.backgroundColor = "inherit";
