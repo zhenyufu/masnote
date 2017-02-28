@@ -5,7 +5,7 @@ var exec = require('child_process').exec;
 const Config = require('electron-config');
 const config = new Config();
 const Path = require('path');
-
+//const tinymce = require("tinymce");
 //config.set('unicorn', 'd');
 //console.log(config.get('unicorn'));
 

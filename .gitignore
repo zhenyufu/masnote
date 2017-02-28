@@ -1,4 +1,7 @@
-# Logs
+#build directory 
+masnote-win32-x64/
+
+## Logs
 logs
 *.log
 npm-debug.log*
