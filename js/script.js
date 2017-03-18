@@ -330,6 +330,7 @@ function setMasContent(myHtml){
    //  masContent.innerHTML = myHtml;
    // tinyMCE.activeEditor.
     mceEditor.setContent(myHtml);
+    mceEditor.undoManager.clear();
     console.log(myHtml);
 }
 
