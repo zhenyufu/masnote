@@ -6,19 +6,29 @@ const Config = require('electron-config');
 const config = new Config();
 const Path = require('path');
 //const tinymce = require("tinymce");
-//config.set('unicorn', 'd');
-//console.log(config.get('unicorn'));
+/* 
+ *  Init
+ *  Handlers
+ *  Doers 
+ *  Getters 
+ *  Setters 
+ *
+ *
+ */
+
+
+////////////////////////////////////////////////////// init {
 
 var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
-
-
 var workspacePath = "../workspace";
-var bookArray = [];
-// array of book objects 
-// with book name and full path 
+var bookArray = [];// array of book objects 
 
+
+
+
+/* the book object */
 function Book (path) {
     this.name = Path.parse(path).base;
     this.path = path;
@@ -33,64 +43,53 @@ function Book (path) {
 
 
 
-
+/* main */
 onload = function() {     
     masContent = document.getElementById("mce-main");
-    //setMasContent("<b>yo</b>");
     masFilePath = null;
     sidebarContent =  document.getElementById("sidebar-content");
-     //document.getElementById("mas-open-page").addEventListener("click", handleButtonOpenPage); 
     buttonArrayNewPage = document.getElementsByClassName("mas-new-page");
-
     buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
     buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
-    //buttonArrayOpenPage = document.getElementsByClassName("mas-open-page");
-
     buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
-    //buttonArraySaveAll = document.getElementsByClassName("mas-save-all");
-    
     buttonArraySettings = document.getElementsByClassName("mas-settings");
     for(var i = 0; i < buttonArrayNewPage.length; i++){ buttonArrayNewPage.item(i).addEventListener("click", handleButtonNewPage); }
-
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
     for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
-    //for(var i = 0; i < buttonArrayOpenPage.length; i++){ buttonArrayOpenPage.item(i).addEventListener("click", handleButtonOpenPage); }
     for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
-    
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
-//getConfig();
-config.clear();
-//config.delete('bookArray');
-        for(var i = 0; i < bookArray.length; i++){ 
-            var temp = bookArray[i];
-            bookArray[i] = new Book(temp.path);
-            addBookToSidebar( bookArray[i]); 
-        }
+    // toggle for enabling saved config
+    //getConfig();
+    config.clear();
 
-        if (bookArray.length > 0){
-            console.log("reloding last book at index" + masCurrentBookIndex.toString());
-            //doOpenBook(bookArray[masCurrentBookIndex]);
-            openBookIndexPage(getCurrentBook()); // open the last book index page for now 
-        }
-/*
-        //
-        var  downArray = document.getElementsByClassName("down-arrow");
-        for(var i = 0; i < downArray.length; i++){ 
-            downArray.item(i).addEventListener("click", handleActionDownArrowi(e)); 
-        
-        }
-*/
+    for(var i = 0; i < bookArray.length; i++){ 
+        var temp = bookArray[i];
+        bookArray[i] = new Book(temp.path);
+        addBookToSidebar( bookArray[i]); 
+    }
+
+    if (bookArray.length > 0){
+        console.log("reloding last book at index" + masCurrentBookIndex.toString());
+        openBookIndexPage(getCurrentBook()); // open the last book index page for now 
+    }
+
 }
 
+
+
+
+/* on exit */
 window.onbeforeunload = function (e) { 
-    //alert("dd");
     // set the configs again one last time or only here?     
-setConfig();
-doSaveToFile(mceEditor.getContent(), masFilePath);
+    setConfig();
+    doSaveToFile(mceEditor.getContent(), masFilePath);
 }
 
 
+
+
+/* loading whatever saved configs */
 function getConfig(){
     workspacePath = config.get("workspacePath") || "";
     bookArray = config.get("bookArray") || bookArray;
@@ -99,6 +98,8 @@ function getConfig(){
 
 
 
+
+/* saving config stuff */
 function setConfig(){
     config.set("workspacePath", workspacePath);
     config.set("bookArray", bookArray);
@@ -106,57 +107,50 @@ function setConfig(){
 }
 
 
+
+
+
 tinymce.init({
-   selector: 'div#mce-main',
-   /*fixed_toolbar_container: '#mce-toolbar',
-    setup: function (editor) {
-        editor.on('blur', function () {
-            throw new Error('tiny mce hack workaround');
-        });
-    },*/
-   height: 740,
-   resize: false,
-   menubar: false,
-   plugins: [
-     'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-     'searchreplace wordcount visualblocks visualchars code fullscreen',
-     'insertdatetime media nonbreaking save table contextmenu directionality',
-     'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
-   ],
-   toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter       alignright alignjustify | bullist numlist outdent indent | link image',
-   toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
+    selector: 'div#mce-main',
+    height: 740,
+    resize: false,
+    menubar: false,
+    plugins: [
+        'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+        'searchreplace wordcount visualblocks visualchars code fullscreen',
+        'insertdatetime media nonbreaking save table contextmenu directionality',
+        'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+    ],
+    toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter       alignright alignjustify | bullist numlist outdent indent | link image',
+    toolbar2: 'print preview media | forecolor backcolor emoticons | codesample',
  
-   /*
-    external_plugins: {
-     'myplugin': '/js/myplugin/plugin.min.js'
-   }
- 
-      plugins: [
-     'advlist autolink lists link image charmap print preview anchor',
-     'searchreplace visualblocks code fullscreen',
-     'insertdatetime media table contextmenu paste code'
-   ],
-   toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter        alignright alignjustify | bullist numlist outdent indent | link image',
-   //content_css: '//www.tinymce.com/css/codepen.min.css'
-     */
+    /*
+        external_plugins: {
+        'myplugin': '/js/myplugin/plugin.min.js'
+    }
+    */
     init_instance_callback : function(){
         mceEditor = tinymce.get('mce-main');
     }
 });
 
-function getBookPath(bookName){
-    return  workspacePath + "/" + bookName;
-}
+  window.addEventListener('resize', function(e){
+      e.preventDefault();
+      myWidth = window.innerWidth;
+        myHeight = window.innerHeight;
+       mceEditor.theme.resizeTo (myWidth - 200, myHeight - 130); ///////////////////////////height resize is hardcoded  
 
-function getIndexFile(dirPath){
-    return dirPath + "/" + "index.html";
-}
-
-function getCurrentBook(){
-    return bookArray[masCurrentBookIndex];
-}
+        
+    });
 
 
+////////////////////////////////////////////////////// init }
+
+
+
+////////////////////////////////////////////////////// Handlers {
+
+/* */
 function handleButtonNewPage(){
      setMasContent("");
      mceEditor.windowManager.open({
@@ -183,10 +177,6 @@ function handleButtonNewPage(){
 
 }
 
-
-function getPageOfBook(pageName, book){
-    return book.getPath() + "/" + pageName + ".html";
-}
 
 function handleButtonNewBook() {
     mceEditor.windowManager.open({
@@ -217,35 +207,6 @@ function handleButtonNewBook() {
     }// onsubmit
   });
 }
-
-
-// call ed.focus(); if needed 
-
-/*
-mceEditor.windowManager.open({
-  title: 'Container',
-  body: [{
-    type: 'container',
-    label  : 'flow',
-    layout: 'flow',
-    items: [
-      {type: 'label', text: 'A container'},
-      {type: 'textbox', label: 'textbox', value: 'with a textbox'},
-      {type: 'textbox', label: 'textboxb', value: 'another  textbox'}
-    ]
-  }]
-});
-*/
-
-  window.addEventListener('resize', function(e){
-      e.preventDefault();
-      myWidth = window.innerWidth;
-        myHeight = window.innerHeight;
-       mceEditor.theme.resizeTo (myWidth - 200, myHeight - 130); ///////////////////////////height resize is hardcoded  
-
-        
-    });
-
 
 function handleButtonSettings(){
     mceEditor.windowManager.open({
@@ -292,9 +253,12 @@ function handleButtonSaveBook() {
     //mceEditor.getContent();
 }
 
-function handleActionDownArrow(e){
-    alert(e.target.id);
-}
+////////////////////////////////////////////////////// Handlers }
+
+
+////////////////////////////////////////////////////// Doers {
+
+
 
 function doSaveToFile(stuff, path){
 
@@ -325,34 +289,6 @@ function doOpenPage(myPath){
     });
 }
 
-// helper functions 
-function setMasContent(myHtml){
-   //  masContent.innerHTML = myHtml;
-   // tinyMCE.activeEditor.
-    mceEditor.setContent(myHtml);
-    mceEditor.undoManager.clear();
-    console.log(myHtml);
-}
-
-function setMasFilePath(myFilePath){
-    masFilePath = myFilePath;
-    console.log(masFilePath);
-}
-
-function getBookNameFromPath(bookPath){
-    var temp = bookPath.split("/");
-    return temp[temp.length - 1];
-
-}
-
-function findBookIndex(book) {
-    for(var i = 0; i < bookArray.length; i += 1) {
-        if(bookArray[i].getName() == book.getName()) {
-            return i;
-        }
-    }
-    return -1;
-}
 
 
 function doOpenBook(book){
@@ -378,6 +314,7 @@ function openBookIndexPage(book){
     doOpenPage(p);  
     
 }
+
 
 
 function makeFont(name){
@@ -418,10 +355,6 @@ function addPageToSidebar(myPath, pageListEle, book){
         pageListEle.appendChild(pageEle);
 }
 
-function getPageListEle(book){
-    return document.getElementById("display-" + book.getName() + "-pageList");
-}
-
 function addPagesToSidebar(book){
     var pageListEle = getPageListEle(book); //document.getElementById("display-" + book.getName() + "-pageList");
     console.log(book.pageArray);
@@ -433,38 +366,6 @@ function addPagesToSidebar(book){
     }
    
 }
-
-function setElementId(ele,type,bookName,thing ){
-    ele.id = type + "-" + bookName + "-" +  thing;
-}
-
-function setClickOpenPage(ele, path){
-    ele.addEventListener("click", function() {
-     doOpenPage(path);
-        // change the last current page color  
-        var pName = removeExtension(Path.basename(masFilePath));
-        pId = "";
-
-        if (pName == "index"){
-            pId = "book-" + getCurrentBook().getName() + "-" + pName;
-        }
-        else{
-            pId = "page-" + getCurrentBook().getName() + "-" + pName;
-        }
-
-        
-        console.log(path);
-        var pLi = document.getElementById(pId)
-        if(pLi){
-            pLi.style.backgroundColor = "inherit";
-            // set the new one 
-            ele.parentNode.style.backgroundColor = "#cecece"; 
-        }
-    });
-
-
-}
-
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
@@ -538,4 +439,112 @@ function toggleShowHide(ele){
     }
 
 }
+
+////////////////////////////////////////////////////// Doers }
+
+////////////////////////////////////////////////////// Getters {
+
+/* i given bookname, return the full path from workspace*/
+function getBookPath(bookName){
+    return  workspacePath + "/" + bookName;
+}
+
+
+
+
+/* add indexfile path*/
+function getIndexFile(dirPath){
+    return dirPath + "/" + "index.html";
+}
+
+
+
+
+/* */
+function getCurrentBook(){
+    return bookArray[masCurrentBookIndex];
+}
+function getPageOfBook(pageName, book){
+    return book.getPath() + "/" + pageName + ".html";
+}
+
+
+function getBookNameFromPath(bookPath){
+    var temp = bookPath.split("/");
+    return temp[temp.length - 1];
+
+}
+
+function getPageListEle(book){
+    return document.getElementById("display-" + book.getName() + "-pageList");
+}
+
+
+////////////////////////////////////////////////////// Getters }
+
+
+
+////////////////////////////////////////////////////// Setters {
+
+
+
+// helper functions 
+function setMasContent(myHtml){
+   //  masContent.innerHTML = myHtml;
+   // tinyMCE.activeEditor.
+    mceEditor.setContent(myHtml);
+    mceEditor.undoManager.clear();
+    console.log(myHtml);
+}
+
+function setMasFilePath(myFilePath){
+    masFilePath = myFilePath;
+    console.log(masFilePath);
+}
+
+
+
+function findBookIndex(book) {
+    for(var i = 0; i < bookArray.length; i += 1) {
+        if(bookArray[i].getName() == book.getName()) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
+function setElementId(ele,type,bookName,thing ){
+    ele.id = type + "-" + bookName + "-" +  thing;
+}
+
+function setClickOpenPage(ele, path){
+    ele.addEventListener("click", function() {
+     doOpenPage(path);
+        // change the last current page color  
+        var pName = removeExtension(Path.basename(masFilePath));
+        pId = "";
+
+        if (pName == "index"){
+            pId = "book-" + getCurrentBook().getName() + "-" + pName;
+        }
+        else{
+            pId = "page-" + getCurrentBook().getName() + "-" + pName;
+        }
+
+        
+        console.log(path);
+        var pLi = document.getElementById(pId)
+        if(pLi){
+            pLi.style.backgroundColor = "inherit";
+            // set the new one 
+            ele.parentNode.style.backgroundColor = "#cecece"; 
+        }
+    });
+
+
+}
+
+
+////////////////////////////////////////////////////// Setters }
 
