@@ -110,6 +110,7 @@ function setConfig(){
 
 
 
+/* editor init */
 tinymce.init({
     selector: 'div#mce-main',
     height: 740,
@@ -134,23 +135,25 @@ tinymce.init({
     }
 });
 
-  window.addEventListener('resize', function(e){
-      e.preventDefault();
-      myWidth = window.innerWidth;
-        myHeight = window.innerHeight;
-       mceEditor.theme.resizeTo (myWidth - 200, myHeight - 130); ///////////////////////////height resize is hardcoded  
 
-        
-    });
 
+
+/* resizing for the editor */
+window.addEventListener('resize', function(e){
+    e.preventDefault();
+    myWidth = window.innerWidth;
+    myHeight = window.innerHeight;
+    mceEditor.theme.resizeTo (myWidth - 200, myHeight - 130); ///////////////////////////height resize is hardcoded  
+});
 
 ////////////////////////////////////////////////////// init }
 
 
 
+
 ////////////////////////////////////////////////////// Handlers {
 
-/* */
+/* creates a page for the currently open book*/
 function handleButtonNewPage(){
      setMasContent("");
      mceEditor.windowManager.open({
@@ -165,19 +168,19 @@ function handleButtonNewPage(){
              FileSystem.writeFile(newPath + "/" + newName + ".html", " ", function (err) {
                  if (err) { console.log("Write failed: " + err); }
              });
-             doOpenPage(getPageOfBook(newName, getCurrentBook()));
+                doOpenPage(getPageOfBook(newName, getCurrentBook()));
                 var pageListEle = getPageListEle(getCurrentBook());
-             addPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
-             ////////////////////
+                addPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
 
          });
      }// onsubmit
    });
-
-
 }
 
 
+
+
+/* creates a new book and opens the index page */
 function handleButtonNewBook() {
     mceEditor.windowManager.open({
     title: 'New book',
@@ -208,27 +211,37 @@ function handleButtonNewBook() {
   });
 }
 
+
+
+
+/* the setting button */
 function handleButtonSettings(){
     mceEditor.windowManager.open({
-   title: 'Settings',
-   body: [{type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
-    {type: 'textbox', name: 'serverAddress', label:"Sever Address", value: masServerAddress},
+    title: 'Settings',
+    body: [
+        {type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
+        {type: 'textbox', name: 'serverAddress', label:"Sever Address", value: masServerAddress},
     ],
-   onsubmit: function(e) { workspacePath = e.data.masWorkspacePath; }
- });
-
+    onsubmit: function(e) { workspacePath = e.data.masWorkspacePath; }
+    });
 }
 
 
+
+
+/* open existing page button */
 function handleButtonOpenPage() {
     dialog.showOpenDialog({properties: ['openFile']}, function(myPath) { if(myPath) {doOpenPage(myPath.toString()); } });
 }
 
+
+
+
+/* open existing book button */
 function handleButtonOpenBook() {
     dialog.showOpenDialog({properties:  ['openDirectory']}, function(myPath) { 
         myPath = myPath[0];
         if(myPath) {
-            //
             var b = new Book(myPath); 
             // iterate the pages and give that to b
             FileSystem.readdir(myPath, (err, dir) => { //readDir(myPath, function(dir) {
@@ -238,15 +251,16 @@ function handleButtonOpenBook() {
                     b.pageArray.push(filePath);
                     }
                 }
-
-                    doOpenBook(b);
+                doOpenBook(b);
             });
-
-
         } 
     });
 }
 
+
+
+
+/* save book button */
 function handleButtonSaveBook() {
     // write editor to current file path 
     doSaveToFile(mceEditor.getContent(), masFilePath);
@@ -256,23 +270,21 @@ function handleButtonSaveBook() {
 ////////////////////////////////////////////////////// Handlers }
 
 
+
+
 ////////////////////////////////////////////////////// Doers {
 
-
-
 function doSaveToFile(stuff, path){
-
-FileSystem.writeFile(path, stuff, function (err) {
+    FileSystem.writeFile(path, stuff, function (err) {
         if (err) { console.log("Write failed: " + err); }
 
     });
-
 }
 
-function doFileNew(myPath){
-    setMasFilePath(null);
-}
 
+
+
+/* given the full path, opens and dispalys the page */
 function doOpenPage(myPath){
     FileSystem.readFile(myPath, function (err, data) {
         if (err) { console.log("Read error: " + err); }
@@ -291,6 +303,8 @@ function doOpenPage(myPath){
 
 
 
+
+/* given the book names, opens and displays the book, add it to sidebar if not there */
 function doOpenBook(book){
     // if the book is not in the array add the book
     if( findBookIndex(book) == -1 ){
@@ -307,6 +321,10 @@ function doOpenBook(book){
     openBookIndexPage(book); //////////////////////////////////////////////should be here right : open either way
 }
 
+
+
+
+/* given book name, opens the index page */
 function openBookIndexPage(book){
     var p = book.getIndexFile();//getIndexFile(book);
     console.log(p);
@@ -317,6 +335,8 @@ function openBookIndexPage(book){
 
 
 
+
+/* given the thing to add to fa-, creates and returns a element */
 function makeFont(name){
     var i  = document.createElement('i');
     i.className = "fa fa-" + name;
@@ -324,29 +344,36 @@ function makeFont(name){
     return i;
 }
 
+
+
+
+/* append a css class to the element */
 function addCssClass(ele, str){
     ele.className += (" " + str);
 }
 
+
+
+
+/* 
 function insertAfter(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
+*/
 
-function removeExtension(file){
-   return Path.parse(file).name; 
-}
 
-//myPath is full path
+
+
+/* given the full path of page, add it to the sidebar */ 
 function addPageToSidebar(myPath, pageListEle, book){
-        
         var pageEle = document.createElement('li');
         addCssClass(pageEle, "left-pad-8");
-        setElementId(pageEle, "page", book.getName(), removeExtension(Path.basename(myPath)));
+        setElementId(pageEle, "page", book.getName(), getRemoveExtension(Path.basename(myPath)));
 
         var pg = makeFont("file-o");
         var a = document.createElement('a');
         a.appendChild(pg)
-        var linkText = document.createTextNode ( " " + removeExtension(Path.basename(myPath)) );
+        var linkText = document.createTextNode ( " " + getRemoveExtension(Path.basename(myPath)) );
         a.appendChild(linkText);
         setClickOpenPage(a, myPath);
 
@@ -355,6 +382,9 @@ function addPageToSidebar(myPath, pageListEle, book){
         pageListEle.appendChild(pageEle);
 }
 
+
+
+/* add all pages of the given book to the sidebar */
 function addPagesToSidebar(book){
     var pageListEle = getPageListEle(book); //document.getElementById("display-" + book.getName() + "-pageList");
     console.log(book.pageArray);
@@ -366,6 +396,10 @@ function addPagesToSidebar(book){
     }
    
 }
+
+
+
+/* add the given book to the sidebar */
 function addBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
@@ -430,6 +464,10 @@ function addBookToSidebar(book){
 
 }
 
+
+
+
+/* toggles the display of the given element */
 function toggleShowHide(ele){
     if (ele.style.display !== 'none') {
         ele.style.display = 'none';
@@ -442,12 +480,16 @@ function toggleShowHide(ele){
 
 ////////////////////////////////////////////////////// Doers }
 
+
+
+
 ////////////////////////////////////////////////////// Getters {
 
 /* i given bookname, return the full path from workspace*/
 function getBookPath(bookName){
     return  workspacePath + "/" + bookName;
 }
+
 
 
 
@@ -464,9 +506,15 @@ function getIndexFile(dirPath){
 function getCurrentBook(){
     return bookArray[masCurrentBookIndex];
 }
+
+
+
+
 function getPageOfBook(pageName, book){
     return book.getPath() + "/" + pageName + ".html";
 }
+
+
 
 
 function getBookNameFromPath(bookPath){
@@ -475,20 +523,26 @@ function getBookNameFromPath(bookPath){
 
 }
 
+
+
+function getRemoveExtension(file){
+   return Path.parse(file).name; 
+}
+
+
+
+
 function getPageListEle(book){
     return document.getElementById("display-" + book.getName() + "-pageList");
 }
-
 
 ////////////////////////////////////////////////////// Getters }
 
 
 
+
 ////////////////////////////////////////////////////// Setters {
 
-
-
-// helper functions 
 function setMasContent(myHtml){
    //  masContent.innerHTML = myHtml;
    // tinyMCE.activeEditor.
@@ -497,10 +551,14 @@ function setMasContent(myHtml){
     console.log(myHtml);
 }
 
+
+
+
 function setMasFilePath(myFilePath){
     masFilePath = myFilePath;
     console.log(masFilePath);
 }
+
 
 
 
@@ -514,15 +572,20 @@ function findBookIndex(book) {
 }
 
 
+
+
 function setElementId(ele,type,bookName,thing ){
     ele.id = type + "-" + bookName + "-" +  thing;
 }
+
+
+
 
 function setClickOpenPage(ele, path){
     ele.addEventListener("click", function() {
      doOpenPage(path);
         // change the last current page color  
-        var pName = removeExtension(Path.basename(masFilePath));
+        var pName = getRemoveExtension(Path.basename(masFilePath));
         pId = "";
 
         if (pName == "index"){
@@ -541,10 +604,7 @@ function setClickOpenPage(ele, path){
             ele.parentNode.style.backgroundColor = "#cecece"; 
         }
     });
-
-
 }
-
 
 ////////////////////////////////////////////////////// Setters }
 
