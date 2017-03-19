@@ -66,12 +66,12 @@ onload = function() {
     for(var i = 0; i < bookArray.length; i++){ 
         var temp = bookArray[i];
         bookArray[i] = new Book(temp.path);
-        addBookToSidebar( bookArray[i]); 
+        doAddBookToSidebar( bookArray[i]); 
     }
 
     if (bookArray.length > 0){
         console.log("reloding last book at index" + masCurrentBookIndex.toString());
-        openBookIndexPage(getCurrentBook()); // open the last book index page for now 
+        doOpenBookIndexPage(getCurrentBook()); // open the last book index page for now 
     }
 
 }
@@ -170,7 +170,7 @@ function handleButtonNewPage(){
              });
                 doOpenPage(getPageOfBook(newName, getCurrentBook()));
                 var pageListEle = getPageListEle(getCurrentBook());
-                addPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
+                doAddPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
 
          });
      }// onsubmit
@@ -295,7 +295,7 @@ function doOpenPage(myPath){
         /*
         if(Path.basename(myPath) != "index.html"){
             var pageListEle = getPageListEle(getCurrentBook());
-            addPageToSidebar(myPath, pageListEle);
+            doAddPageToSidebar(myPath, pageListEle);
         }
         */
     });
@@ -307,25 +307,25 @@ function doOpenPage(myPath){
 /* given the book names, opens and displays the book, add it to sidebar if not there */
 function doOpenBook(book){
     // if the book is not in the array add the book
-    if( findBookIndex(book) == -1 ){
+    if( getBookIndex(book) == -1 ){
         console.log("book not in the array"); 
         bookArray.push(book);
-        addBookToSidebar(book);
-        masCurrentBookIndex = findBookIndex(book);
+        doAddBookToSidebar(book);
+        masCurrentBookIndex = getBookIndex(book);
         console.log(masCurrentBookIndex);
     }
     else{
         console.log("book is already in the array");
     }
-    //addPagesToSidebar(book);
-    openBookIndexPage(book); //////////////////////////////////////////////should be here right : open either way
+    //doAddPagesToSidebar(book);
+    doOpenBookIndexPage(book); //////////////////////////////////////////////should be here right : open either way
 }
 
 
 
 
 /* given book name, opens the index page */
-function openBookIndexPage(book){
+function doOpenBookIndexPage(book){
     var p = book.getIndexFile();//getIndexFile(book);
     console.log(p);
     setMasFilePath(getCurrentBook().getIndexFile());
@@ -337,10 +337,10 @@ function openBookIndexPage(book){
 
 
 /* given the thing to add to fa-, creates and returns a element */
-function makeFont(name){
+function doMakeFont(name){
     var i  = document.createElement('i');
     i.className = "fa fa-" + name;
-    addCssClass(i,"cs-padding-2");//i.className += " cs-padding-2";
+    doAddCssClass(i,"cs-padding-2");//i.className += " cs-padding-2";
     return i;
 }
 
@@ -348,7 +348,7 @@ function makeFont(name){
 
 
 /* append a css class to the element */
-function addCssClass(ele, str){
+function doAddCssClass(ele, str){
     ele.className += (" " + str);
 }
 
@@ -365,12 +365,12 @@ function insertAfter(newNode, referenceNode) {
 
 
 /* given the full path of page, add it to the sidebar */ 
-function addPageToSidebar(myPath, pageListEle, book){
+function doAddPageToSidebar(myPath, pageListEle, book){
         var pageEle = document.createElement('li');
-        addCssClass(pageEle, "left-pad-8");
+        doAddCssClass(pageEle, "left-pad-8");
         setElementId(pageEle, "page", book.getName(), getRemoveExtension(Path.basename(myPath)));
 
-        var pg = makeFont("file-o");
+        var pg = doMakeFont("file-o");
         var a = document.createElement('a');
         a.appendChild(pg)
         var linkText = document.createTextNode ( " " + getRemoveExtension(Path.basename(myPath)) );
@@ -385,13 +385,13 @@ function addPageToSidebar(myPath, pageListEle, book){
 
 
 /* add all pages of the given book to the sidebar */
-function addPagesToSidebar(book){
+function doAddPagesToSidebar(book){
     var pageListEle = getPageListEle(book); //document.getElementById("display-" + book.getName() + "-pageList");
     console.log(book.pageArray);
     for (var i = 0; i < book.pageArray.length; i++){
         //bookEle.appendChild(pageEle)
         var myPath = book.getPath() + "/" + book.pageArray[i];
-        addPageToSidebar(myPath, pageListEle, book);   
+        doAddPageToSidebar(myPath, pageListEle, book);   
     
     }
    
@@ -400,13 +400,13 @@ function addPagesToSidebar(book){
 
 
 /* add the given book to the sidebar */
-function addBookToSidebar(book){
+function doAddBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
     var li = document.createElement('li');
     li.id = "book-" + bookName + "-index";
     //fa-book
-    var bk = makeFont("book");
+    var bk = doMakeFont("book");
     var a = document.createElement('a');
     a.appendChild(bk)
     
@@ -428,26 +428,18 @@ function addBookToSidebar(book){
     //a.href = "http://example.com";
     
     //fa-refresh
-    var font = makeFont("refresh");
-    addCssClass(font, "cs-right");
+    var font = doMakeFont("refresh");
+    doAddCssClass(font, "cs-right");
     li.appendChild(font);
     //
-    font = makeFont("caret-down");
+    font = doMakeFont("caret-down");
     setElementId(font, "action", bookName, "down");
-    addCssClass(font, "cs-right down-arrow");
+    doAddCssClass(font, "cs-right down-arrow");
     font.addEventListener("click", function() { 
         var pList = document.getElementById("display-" + bookName + "-pageList");
         //pList.classList.toggle("show");
         console.log(pList);
-        toggleShowHide(pList);
-        /*
-        for(i=0; i<pList.length; i+=1) {
-            //alert(nodes[i]);
-            console.log(pList[i]);
-            toggleShowHide(pList[i]);
-        }
-*/
-        //toggleShowHide(pList);
+        doToggleShowHide(pList);
     });
 
     li.appendChild(font);
@@ -460,7 +452,7 @@ function addBookToSidebar(book){
     sidebarContent.appendChild(li);   
     console.log("add book");
 
-    addPagesToSidebar(book);
+    doAddPagesToSidebar(book);
 
 }
 
@@ -468,7 +460,7 @@ function addBookToSidebar(book){
 
 
 /* toggles the display of the given element */
-function toggleShowHide(ele){
+function doToggleShowHide(ele){
     if (ele.style.display !== 'none') {
         ele.style.display = 'none';
     }
@@ -484,6 +476,18 @@ function toggleShowHide(ele){
 
 
 ////////////////////////////////////////////////////// Getters {
+
+/* give the book, return the index in the current bookArray */
+function getBookIndex(book) {
+    for(var i = 0; i < bookArray.length; i += 1) {
+        if(bookArray[i].getName() == book.getName()) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
 
 /* i given bookname, return the full path from workspace*/
 function getBookPath(bookName){
@@ -502,7 +506,7 @@ function getIndexFile(dirPath){
 
 
 
-/* */
+/* get the current book */
 function getCurrentBook(){
     return bookArray[masCurrentBookIndex];
 }
@@ -510,6 +514,7 @@ function getCurrentBook(){
 
 
 
+/* given the book and pageName, return the actual file path to the html file */
 function getPageOfBook(pageName, book){
     return book.getPath() + "/" + pageName + ".html";
 }
@@ -517,6 +522,7 @@ function getPageOfBook(pageName, book){
 
 
 
+/* gives the bookPath, returns the bookName */
 function getBookNameFromPath(bookPath){
     var temp = bookPath.split("/");
     return temp[temp.length - 1];
@@ -525,6 +531,8 @@ function getBookNameFromPath(bookPath){
 
 
 
+
+/* removes the extension */
 function getRemoveExtension(file){
    return Path.parse(file).name; 
 }
@@ -543,12 +551,11 @@ function getPageListEle(book){
 
 ////////////////////////////////////////////////////// Setters {
 
+/* set the editor to the passed in html, */
 function setMasContent(myHtml){
-   //  masContent.innerHTML = myHtml;
-   // tinyMCE.activeEditor.
     mceEditor.setContent(myHtml);
-    mceEditor.undoManager.clear();
-    console.log(myHtml);
+    mceEditor.undoManager.clear();//////////////////////////////////////////////////////clears the undo history for now, might want to change it different instences later 
+    //console.log(myHtml);
 }
 
 
@@ -558,19 +565,6 @@ function setMasFilePath(myFilePath){
     masFilePath = myFilePath;
     console.log(masFilePath);
 }
-
-
-
-
-function findBookIndex(book) {
-    for(var i = 0; i < bookArray.length; i += 1) {
-        if(bookArray[i].getName() == book.getName()) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 
 
 
