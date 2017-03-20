@@ -375,7 +375,7 @@ function doAddPageToSidebar(myPath, pageListEle, book){
         a.appendChild(pg)
         var linkText = document.createTextNode ( " " + getRemoveExtension(Path.basename(myPath)) );
         a.appendChild(linkText);
-        setClickOpenPage(a, myPath);
+        setClickOpenPage(pageEle, myPath);
 
         pageEle.appendChild(a);
         //insertAfter(pageEle,bookEle);
@@ -403,35 +403,24 @@ function doAddPagesToSidebar(book){
 function doAddBookToSidebar(book){
     var bookName = book.getName();//getBookNameFromPath(bookPath);
     
+    // the index li
     var li = document.createElement('li');
     li.id = "book-" + bookName + "-index";
     //fa-book
     var bk = doMakeFont("book");
     var a = document.createElement('a');
     a.appendChild(bk)
-    
     var linkText = document.createTextNode ( " " + bookName);
     a.appendChild(linkText);
-    //a.masLink = book.getIndexFile(); 
-    /*
-    a.addEventListener("click", function() {
-    doOpenPage(book.getIndexFile() );
-
-    });
-    */
-    setClickOpenPage(a, book.getIndexFile());
-
+    setClickOpenPage(li, book.getIndexFile());
     li.appendChild(a);
-    //
-    //li.appendChild(linkText);
-        //a.title = bookName;
-    //a.href = "http://example.com";
     
     //fa-refresh
     var font = doMakeFont("refresh");
     doAddCssClass(font, "cs-right");
     li.appendChild(font);
-    //
+    
+    // arrow down
     font = doMakeFont("caret-down");
     setElementId(font, "action", bookName, "down");
     doAddCssClass(font, "cs-right down-arrow");
@@ -441,15 +430,14 @@ function doAddBookToSidebar(book){
         console.log(pList);
         doToggleShowHide(pList);
     });
-
     li.appendChild(font);
+    
     //the list 
     var pList = document.createElement('div');
     setElementId(pList, "display", bookName, "pageList");
-    li.appendChild(pList);
-
-
-    sidebarContent.appendChild(li);   
+    //li.appendChild(pList);
+    sidebarContent.appendChild(li);
+    sidebarContent.appendChild(pList);
     console.log("add book");
 
     doAddPagesToSidebar(book);
@@ -574,11 +562,11 @@ function setElementId(ele,type,bookName,thing ){
 
 
 
-
+/* given the a tag and the path, add a event listener */
 function setClickOpenPage(ele, path){
     ele.addEventListener("click", function() {
-     doOpenPage(path);
-        // change the last current page color  
+        doOpenPage(path);
+        // find the current page 
         var pName = getRemoveExtension(Path.basename(masFilePath));
         pId = "";
 
@@ -592,13 +580,26 @@ function setClickOpenPage(ele, path){
         
         console.log(path);
         var pLi = document.getElementById(pId)
+        console.log(pLi);
+        console.log(ele);
         if(pLi){
-            pLi.style.backgroundColor = "inherit";
-            // set the new one 
-            ele.parentNode.style.backgroundColor = "#cecece"; 
+            setUnclickedColor(pLi);
+            setClickedColor(ele)
         }
     });
 }
+
+function setClickedColor(ele){
+    ele.style.backgroundColor = "#cecece";
+}
+function setUnclickedColor(ele){
+    ele.style.backgroundColor = "inherit";
+}
+
+
+
+
+
 
 ////////////////////////////////////////////////////// Setters }
 
