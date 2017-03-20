@@ -24,7 +24,7 @@ var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarConte
 var mceEditor;
 var workspacePath = "../workspace";
 var bookArray = [];// array of book objects 
-
+var currentEle = null;
 
 
 
@@ -431,7 +431,8 @@ function doAddBookToSidebar(book){
         doToggleShowHide(pList);
     });
     li.appendChild(font);
-    
+    setClickedThis(li);
+
     //the list 
     var pList = document.createElement('div');
     setElementId(pList, "display", bookName, "pageList");
@@ -566,6 +567,48 @@ function setElementId(ele,type,bookName,thing ){
 function setClickOpenPage(ele, path){
     ele.addEventListener("click", function() {
         doOpenPage(path);
+        setClickedThis(ele);
+    });
+}
+
+function setClickedThis(ele){
+    if(currentEle){
+    currentEle.style.backgroundColor = "inherit";  
+    }
+    ele.style.backgroundColor = "#cecece";
+    currentEle = ele;
+    
+}
+
+
+    
+
+function setClickedColor(ele){
+    ele.style.backgroundColor = "#cecece";
+    currentEle = ele;
+}
+function setUnclickedColor(ele){
+    ele.style.backgroundColor = "inherit";
+}
+
+
+
+
+
+
+////////////////////////////////////////////////////// Setters }
+
+
+
+
+
+
+////////////////////////////////////////////////////// old stuff :
+    
+    //setUnclickedColor(pLi);
+    //setClickedColor(ele)
+
+    /*
         // find the current page 
         var pName = getRemoveExtension(Path.basename(masFilePath));
         pId = "";
@@ -578,28 +621,18 @@ function setClickOpenPage(ele, path){
         }
 
         
-        console.log(path);
         var pLi = document.getElementById(pId)
         console.log(pLi);
         console.log(ele);
         if(pLi){
             setUnclickedColor(pLi);
-            setClickedColor(ele)
+            setClickedColor(ele);
         }
-    });
-}
-
-function setClickedColor(ele){
-    ele.style.backgroundColor = "#cecece";
-}
-function setUnclickedColor(ele){
-    ele.style.backgroundColor = "inherit";
-}
+    */
 
 
 
 
 
 
-////////////////////////////////////////////////////// Setters }
 
