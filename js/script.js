@@ -170,8 +170,8 @@ function handleButtonNewPage(){
                 doOpenPage(getPageOfBook(newName, getCurrentBook()));
                 //setMasContent("");
                 var pageListEle = getPageListEle(getCurrentBook());
-                doAddPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
-
+                doAddPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook() , true);
+                //setClickedThis(pageListEle);
          });
      }// onsubmit
    });
@@ -366,7 +366,7 @@ function insertAfter(newNode, referenceNode) {
 
 
 /* given the full path of page, add it to the sidebar */ 
-function doAddPageToSidebar(myPath, pageListEle, book){
+function doAddPageToSidebar(myPath, pageListEle, book, doSetClick){
         var pageEle = document.createElement('li');
         doAddCssClass(pageEle, "left-pad-8");
         setElementId(pageEle, "page", book.getName(), getRemoveExtension(Path.basename(myPath)));
@@ -377,6 +377,9 @@ function doAddPageToSidebar(myPath, pageListEle, book){
         var linkText = document.createTextNode ( " " + getRemoveExtension(Path.basename(myPath)) );
         a.appendChild(linkText);
         setClickOpenPage(pageEle, myPath);
+        if (doSetClick){
+            setClickedThis(pageEle);
+        }
 
         pageEle.appendChild(a);
         //insertAfter(pageEle,bookEle);
@@ -392,7 +395,7 @@ function doAddPagesToSidebar(book){
     for (var i = 0; i < book.pageArray.length; i++){
         //bookEle.appendChild(pageEle)
         var myPath = book.getPath() + "/" + book.pageArray[i];
-        doAddPageToSidebar(myPath, pageListEle, book);   
+        doAddPageToSidebar(myPath, pageListEle, book, false);   
     
     }
    
