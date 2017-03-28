@@ -155,7 +155,6 @@ window.addEventListener('resize', function(e){
 
 /* creates a page for the currently open book*/
 function handleButtonNewPage(){
-     setMasContent("");
      mceEditor.windowManager.open({
      title: 'New Page',
      body: {type: 'textbox', name:"masName", label:"Enter name"},
@@ -169,6 +168,7 @@ function handleButtonNewPage(){
                  if (err) { console.log("Write failed: " + err); }
              });
                 doOpenPage(getPageOfBook(newName, getCurrentBook()));
+                //setMasContent("");
                 var pageListEle = getPageListEle(getCurrentBook());
                 doAddPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook());
 
@@ -291,6 +291,7 @@ function doOpenPage(myPath){
         handleButtonSaveBook();////////////////////////////////////saves the current first
         setMasContent(String(data));
         setMasFilePath(myPath);
+        
         //do not add if it is index.html file
         /*
         if(Path.basename(myPath) != "index.html"){
@@ -583,15 +584,6 @@ function setClickedThis(ele){
 
     
 
-function setClickedColor(ele){
-    ele.style.backgroundColor = "#cecece";
-    currentEle = ele;
-}
-function setUnclickedColor(ele){
-    ele.style.backgroundColor = "inherit";
-}
-
-
 
 
 
@@ -628,6 +620,25 @@ function setUnclickedColor(ele){
             setUnclickedColor(pLi);
             setClickedColor(ele);
         }
+
+
+
+
+
+function setClickedColor(ele){
+    ele.style.backgroundColor = "#cecece";
+    currentEle = ele;
+}
+function setUnclickedColor(ele){
+    ele.style.backgroundColor = "inherit";
+}
+
+
+
+
+
+
+
     */
 
 
