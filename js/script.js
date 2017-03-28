@@ -262,8 +262,7 @@ function handleButtonOpenBook() {
 
 /* save book button */
 function handleButtonSaveBook() {
-    // write editor to current file path 
-    doSaveToFile(mceEditor.getContent(), masFilePath);
+    doSaveCurrentContent();
     //mceEditor.getContent();
 }
 
@@ -273,6 +272,13 @@ function handleButtonSaveBook() {
 
 
 ////////////////////////////////////////////////////// Doers {
+
+
+function doSaveCurrentContent(){
+    // write editor to current file path 
+    doSaveToFile(mceEditor.getContent(), masFilePath);
+}
+
 
 function doSaveToFile(stuff, path){
     FileSystem.writeFile(path, stuff, function (err) {
@@ -288,7 +294,8 @@ function doSaveToFile(stuff, path){
 function doOpenPage(myPath){
     FileSystem.readFile(myPath, function (err, data) {
         if (err) { console.log("Read error: " + err); }
-        handleButtonSaveBook();////////////////////////////////////saves the current first
+        doSaveCurrentContent();////////////////////////////////////saves the current first
+        
         setMasContent(String(data));
         setMasFilePath(myPath);
         
