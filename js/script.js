@@ -23,6 +23,8 @@ var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpen
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
 var workspacePath = "../workspace";
+var serverAddress = "http://";
+
 var bookArray = [];// array of book objects 
 var currentEle = null;
 
@@ -220,12 +222,14 @@ function handleButtonSettings(){
     title: 'Settings',
     body: [
         {type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
-        {type: 'textbox', name: 'serverAddress', label:"Sever Address", value: masServerAddress},
+        {type: 'textbox', name: 'masServerAddress', label:"Sever Address", value: serverAddress},
     ],
-    onsubmit: function(e) { workspacePath = e.data.masWorkspacePath; }
+    onsubmit: function(e) { 
+        workspacePath = e.data.masWorkspacePath; 
+        serverAddress = e.data.masServerAddress;        
+    }
     });
 }
-
 
 
 
