@@ -267,6 +267,8 @@ function handleButtonOpenBook() {
 /* save book button */
 function handleButtonSaveBook() {
     doSaveCurrentContent();
+    doSyncCurrentBook();
+    
     //mceEditor.getContent();
 }
 
@@ -276,6 +278,36 @@ function handleButtonSaveBook() {
 
 
 ////////////////////////////////////////////////////// Doers {
+
+
+function doNotification(type, message){
+    mceEditor.notificationManager.open({
+        text: message,
+        type: type,
+    });
+//success
+//info
+//warning
+//error
+}
+
+
+function doSyncCurrentBook(){
+    var newPath = getCurrentBook().getPath();
+    var upStream = getCurrentBook().getUpstream();
+    var commitMessage = "'message here ..'"
+    exec('git add .', {cwd: newPath}, function (error, stdout, stderr){
+        console.log("pwd: " + error + " : " + stdout);
+        exec('git commit -m ' + commitMessage, {cwd: newPath}, function (error, stdout, stderr){
+            console.log("pwd: " + error + " : " + stdout);
+             exec('git push', {cwd: newPath}, function (error, stdout, stderr){
+                console.log("pwd: " + error + " : " + stdout);
+                doNotification("success","success on sycn!");   
+            });
+        });
+    });
+
+}
 
 
 function doSaveCurrentContent(){
