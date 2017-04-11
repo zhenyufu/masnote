@@ -196,6 +196,7 @@ function handleButtonNewBook() {
             // git init
             exec('git init', {cwd: newPath}, function (error, stdout, stderr){
                 console.log("pwd: " + error + " : " + stdout);
+                alert("pwd: " + error + " : " + stdout);
             });
             //empty initial file
             FileSystem.writeFile(newPath + "/index.html", " ", function (err) {

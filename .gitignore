@@ -1,5 +1,6 @@
 #build directory 
 masnote-win32-x64/
+masnote-darwin-x64/
 
 ## Logs
 logs
