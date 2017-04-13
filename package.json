@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "tinymce": "4.5.2",
+    "nodegit": "0.18.0",
     "electron-config": "0.2.1"
   },
   "repository": {

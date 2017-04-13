@@ -19,7 +19,7 @@ const Path = require('path');
 
 ////////////////////////////////////////////////////// init {
 
-var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
+var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayDownloadBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
 var workspacePath = "../workspace";
@@ -53,11 +53,13 @@ onload = function() {
     buttonArrayNewPage = document.getElementsByClassName("mas-new-page");
     buttonArrayNewBook = document.getElementsByClassName("mas-new-book");
     buttonArrayOpenBook = document.getElementsByClassName("mas-open-book");
+    buttonArrayDownloadBook = document.getElementsByClassName("mas-download-book");
     buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
     buttonArraySettings = document.getElementsByClassName("mas-settings");
     for(var i = 0; i < buttonArrayNewPage.length; i++){ buttonArrayNewPage.item(i).addEventListener("click", handleButtonNewPage); }
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
     for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
+    for(var i = 0; i < buttonArrayDownloadBook.length; i++){ buttonArrayDownloadBook.item(i).addEventListener("click", handleButtonDownloadBook); }
     for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
@@ -263,6 +265,18 @@ function handleButtonOpenBook() {
 }
 
 
+function handleButtonDownloadBook(){
+
+     mceEditor.windowManager.open({
+     title: 'Download Book',
+     body: {type: 'textbox', name:"masName", label:"Enter url"},
+     onsubmit: function(e) {
+         var newName = e.data.masName;
+            
+     }// onsubmit
+   });
+
+}
 
 
 /* save book button */
