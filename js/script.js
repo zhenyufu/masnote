@@ -5,7 +5,7 @@ var exec = require('child_process').exec;
 const Config = require('electron-config');
 const config = new Config();
 const Path = require('path');
-const Git = require("nodegit");
+const NodeGit = require("nodegit");
 
 //const tinymce = require("tinymce");
 /* 
@@ -194,7 +194,31 @@ function handleButtonNewBook() {
     onsubmit: function(e) { 
         var newName = e.data.masName; 
         var newPath = getBookPath(newName); 
-        // mkdir 
+        
+        // make the folder
+        FileSystem.mkdir(newPath);
+        var isBare = 0;
+        NodeGit.Repository.init(newPath, isBare).then(function (repo) {
+            
+            //empty initial file
+             FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
+                 if (err) { console.log("Write failed: " + err); }
+             });
+            
+             // set initial commit 
+             
+             
+             //success 
+             var b = new Book(newPath);
+             //bookArray.push(b);
+             
+             setMasContent("");
+             doOpenBook(b);
+
+        }); 
+        
+        // mkdir
+        /*
         exec('mkdir ' + newName, {cwd: workspacePath}, function (error, stdout, stderr){
             console.log("pwd: " + error + " : " + stdout);
             // git init
@@ -213,7 +237,7 @@ function handleButtonNewBook() {
             setMasContent("");
             doOpenBook(b);
 
-        });
+        });*/
     }// onsubmit
   });
 }
@@ -280,7 +304,7 @@ function handleButtonDownloadBook(){
 
 
          ///////////////////////////
-        Git.Clone(bookUrl, workspacePath + "/namehere")
+        NodeGit.Clone(bookUrl, workspacePath + "/namehere")
             .then(function(repo) {
                 return repo.getMasterCommit();  //getCommit("59b20b8d5c6ff8d09518454d4dd8b7b30f095ab5");
             })
