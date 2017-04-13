@@ -5,7 +5,7 @@ var exec = require('child_process').exec;
 const Config = require('electron-config');
 const config = new Config();
 const Path = require('path');
-//const Git = require("nodegit");
+const Git = require("nodegit");
 
 //const tinymce = require("tinymce");
 /* 
@@ -276,11 +276,11 @@ function handleButtonDownloadBook(){
          var bookUrl = e.data.masName;
 
 
-/*
+
 
 
          ///////////////////////////
-        Git.Clone(bookUrl, workspacePath)
+        Git.Clone(bookUrl, workspacePath + "/namehere")
             .then(function(repo) {
                 return repo.getMasterCommit();  //getCommit("59b20b8d5c6ff8d09518454d4dd8b7b30f095ab5");
             })
@@ -306,7 +306,7 @@ function handleButtonDownloadBook(){
             .catch(function(err) { console.log(err); }); 
          
          
-        */ 
+        
          
          
          /////////////////////////
