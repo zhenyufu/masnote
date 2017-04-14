@@ -4,8 +4,8 @@
   "description": "nasnote notebook",
   "main": "main.js",
   "scripts": {
-    "setgit": "BUILD_ONLY=true ELECTRON_VERSION=1.3.5 npm install nodegit",
     "main": "./node_modules/.bin/electron main.js",
+    "buildgit": "BUILD_ONLY=true ELECTRON_VERSION=1.3.5 npm install nodegit",
     "testwin": "build --dir --x64 --win",
     "testlinux": "build --dir --x64 --linux",
     "testall": "build --dir --x64 --linux --win --mac",
