@@ -4,8 +4,10 @@
   "description": "nasnote notebook",
   "main": "main.js",
   "scripts": {
-    "test": "build --dir --linux --win --x64",
-    "dist": "build"
+    "testwin": "build --dir --x64 --win",
+    "testlinux": "build --dir --x64 --linux",
+    "testall": "build --dir --x64 --linux --win --mac",
+    "buildall":"build --x64 --linux --win --mac"
   },
   "dependencies": {
     "tinymce": "4.5.2",
