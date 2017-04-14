@@ -7,7 +7,7 @@ const config = new Config();
 const Path = require('path');
 const NodeGit = require("nodegit");
 
-//const tinymce = require("tinymce");
+//const Tinymce = require("tinymce");
 /* 
  *  Init
  *  Handlers
