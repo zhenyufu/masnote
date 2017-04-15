@@ -5,12 +5,14 @@
   "main": "main.js",
   "scripts": {
     "main": "./node_modules/.bin/electron main.js",
-    "buildgit": "npm rebuild --runtime=electron --target=1.3.5 --disturl=https://atom.io/download/atom-shell --arch=x64 --build-from-source --abi=49",
-    "testwin": "build --dir --x64 --win",
-    "testlinux": "build --dir --x64 --linux",
-    "testall": "build --dir --x64 --linux --win --mac",
-    "buildwin": "build --x64 --win",
-    "buildall": "build --x64 --linux --win --mac"
+    "install_git_win": "npm i nodegit --target_platform=win32",
+    "install_git_linux": "npm i nodegit --target_platform=linux",
+    "my_move_win": "rm -rf /media/sf_myshareDebianMain/win-unpacked && cp -r dist/win-unpacked/ /media/sf_myshareDebianMain/",
+    "test_win": "npm run install_git_win && build --dir --x64 --win && npm run my_move_win",
+    "test_linux": "npm run install_git_linux && build --dir --x64 --linux",
+    "test_all": "build --dir --x64 --linux --win --mac",
+    "build_win": "npm run build_git_win && build --x64 --win",
+    "build_all": "build --x64 --linux --win --mac"
   },
   "dependencies": {
     "tinymce": "4.5.2",
