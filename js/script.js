@@ -24,7 +24,7 @@ const NodeGit = require("nodegit");
 var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayDownloadBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
-var workspacePath = "../workspace";
+var workspacePath = "./workspace";
 var serverAddress = "http://";
 
 var bookArray = [];// array of book objects 
@@ -168,8 +168,6 @@ function handleButtonNewPage(){
          var newName = e.data.masName;
          var newPath = getCurrentBook().getPath();
          // mkdir 
-         exec('cd ' + newPath, function (error, stdout, stderr){
-             console.log("pwd: " + error + " : " + stdout);
              FileSystem.writeFile(newPath + "/" + newName + ".html", " ", function (err) {
                  if (err) { console.log("Write failed: " + err); }
              });
@@ -178,7 +176,6 @@ function handleButtonNewPage(){
                 var pageListEle = getPageListEle(getCurrentBook());
                 doAddPageToSidebar(getPageOfBook(newName, getCurrentBook()), pageListEle,  getCurrentBook() , true);
                 //setClickedThis(pageListEle);
-         });
      }// onsubmit
    });
 }
