@@ -268,25 +268,36 @@ function handleButtonOpenBook() {
 
 
 function handleButtonDownloadBook(){
-
-     mceEditor.windowManager.open({
-     title: 'Download Book',
-     body: {type: 'textbox', name:"masName", label:"Enter url"},
-     onsubmit: function(e) {
-         var bookUrl = e.data.masName;
-
-
-
-
-
+    mceEditor.windowManager.open({
+    title: 'Download Book',
+    body: {type: 'textbox', name:"masName", label:"Enter url"},
+    onsubmit: function(e) {
+        var bookUrl = e.data.masName;
+        var bookName = Path.basename(bookUrl, ".git")
+        var myPath = workspacePath + "/" + bookName;
+        // check if it's already there 
+        try {
+            FileSystem.statSync(myPath);
+            // if it exist:
+            var b = new Book(myPath);
+            doOpenBook(b);
+            return;
+        }
+        catch(err){
+            // nothing just cont
+        }
          ///////////////////////////
-        NodeGit.Clone(bookUrl, workspacePath + "/namehere")
+        NodeGit.Clone(bookUrl, myPath)
             .then(function(repo) {
                 return repo.getMasterCommit();  //getCommit("59b20b8d5c6ff8d09518454d4dd8b7b30f095ab5");
             })
             .then(function(commit) {
-                return commit.getEntry("README.md");
+                var b = new Book(myPath);
+                doOpenBook(b); 
+            
+                //return commit.getEntry("index.html");
             })
+            /*
             // Get the blob contents from the file.
             .then(function(entry) {
                 // Patch the blob to contain a reference to the entry.
@@ -297,12 +308,10 @@ function handleButtonDownloadBook(){
             })
             // Display information about the blob.
             .then(function(blob) {
-                console.log(blob.entry.path() + blob.entry.sha() + blob.rawsize() + "b");
-                // Show a spacer.
-                console.log(Array(72).join("=") + "\n\n");
-                // Show the entire file.
-                console.log(String(blob));
+                
+               
             })
+            */
             .catch(function(err) { console.log(err); }); 
          
          
