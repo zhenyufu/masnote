@@ -1,7 +1,7 @@
 const {remote, clipboard} = require('electron');
 const {Menu, MenuItem, dialog } = remote;
 const FileSystem = require("fs");
-var exec = require('child_process').exec;
+//var exec = require('child_process').exec;
 const Config = require('electron-config');
 const config = new Config();
 const Path = require('path');
@@ -214,27 +214,6 @@ function handleButtonNewBook() {
 
         }); 
         
-        // mkdir
-        /*
-        exec('mkdir ' + newName, {cwd: workspacePath}, function (error, stdout, stderr){
-            console.log("pwd: " + error + " : " + stdout);
-            // git init
-            exec('git init', {cwd: newPath}, function (error, stdout, stderr){
-                console.log("pwd: " + error + " : " + stdout);
-                alert("pwd: " + error + " : " + stdout);
-            });
-            //empty initial file
-            FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
-                if (err) { console.log("Write failed: " + err); }
-            });
-            //success 
-            var b = new Book(newPath);
-            //bookArray.push(b);
-            
-            setMasContent("");
-            doOpenBook(b);
-
-        });*/
     }// onsubmit
   });
 }
@@ -369,6 +348,14 @@ function doSyncCurrentBook(){
     var newPath = getCurrentBook().getPath();
     var upStream = getCurrentBook().getUpstream();
     var commitMessage = "'message here ..'"
+    
+    
+
+
+                
+    doNotification("success","success on sycn!");   
+
+    /*    
     exec('git add .', {cwd: newPath}, function (error, stdout, stderr){
         console.log("pwd: " + error + " : " + stdout);
         exec('git commit -m ' + commitMessage, {cwd: newPath}, function (error, stdout, stderr){
@@ -379,7 +366,7 @@ function doSyncCurrentBook(){
             });
         });
     });
-
+    */
 }
 
 
