@@ -26,6 +26,8 @@ var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarConte
 var mceEditor;
 var workspacePath = "./workspace";
 var serverAddress = "http://";
+var serverUser = "test@csmojo.com"
+var serverPass = "zhenyufu2000";
 
 var bookArray = [];// array of book objects 
 var currentEle = null;
@@ -230,10 +232,14 @@ function handleButtonSettings(){
     body: [
         {type: 'textbox', name: 'masWorkspacePath', label:"workspace path", value: workspacePath},
         {type: 'textbox', name: 'masServerAddress', label:"Sever Address", value: serverAddress},
+        {type: 'textbox', name: 'masServerUser', label:"Sever User", value: serverUser},
+        {type: 'textbox', name: 'masServerPass', label:"Sever Pass", value: serverPass},
     ],
     onsubmit: function(e) { 
         workspacePath = e.data.masWorkspacePath; 
         serverAddress = e.data.masServerAddress;        
+        serverUser = e.data.masServerUser;
+        serverPass = e.data.masServerPass;
     }
     });
 }
@@ -383,7 +389,9 @@ function doSyncCurrentBook(){
     })
     .then(function(parent) {
         //var signature = Signature.create(name, email, time, offset);
-        var author = NodeGit.Signature.create("zhenyufu", "zhenyufu@usc.edu", + new Date() , 0);
+        //var author = NodeGit.Signature.create("zhenyufu", "zhenyufu@usc.edu", + new Date() , 0);
+
+        var author = NodeGit.Signature.create(serverUser, serverUser, + new Date() , 0);
         var committer = author; //NodeGit.Signature.create("Scott A Chacon","scott@github.com", 987654321, 90);
         return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
     })
@@ -402,8 +410,9 @@ function doSyncCurrentBook(){
         callbacks: {
           credentials: function(url, userName) {
               console.log("Requesting creds");
-                return NodeGit.Cred.userpassPlaintextNew("zhenyufu", "zhenyufu2000");
-              //return NodeGit.Cred.sshKeyFromAgent(userName);
+               
+              return NodeGit.Cred.userpassPlaintextNew(serverUser, serverPass);
+                //return NodeGit.Cred.sshKeyFromAgent("z");
           }
         }
       }
