@@ -204,7 +204,9 @@ function handleButtonNewBook() {
             
              // set initial commit 
              
-             
+            // create new remote and push
+            // https://github.com/nodegit/nodegit/blob/master/examples/push.js
+
              //success 
              var b = new Book(newPath);
              //bookArray.push(b);
@@ -354,15 +356,73 @@ function doNotification(type, message){
 
 
 function doSyncCurrentBook(){
-    var newPath = getCurrentBook().getPath();
+    var bookPath = getCurrentBook().getPath();
     var upStream = getCurrentBook().getUpstream();
-    var commitMessage = "'message here ..'"
+    var commitMessage = "message here .."
+    
+    var repo;
+    var remote;
+    var oid;
+
+    NodeGit.Repository.open(bookPath)
+    .then(function(repoResult) {
+        repo = repoResult
+        return repo.refreshIndex();
+    })
+    .then(function(index) {
+       index.addAll();
+       index.write();
+       return index.writeTree();
+    })
+    .then(function(oidResult) {
+        oid = oidResult;
+        return NodeGit.Reference.nameToId(repo, "HEAD");
+    })
+    .then(function(head) {
+        return repo.getCommit(head);
+    })
+    .then(function(parent) {
+        //var signature = Signature.create(name, email, time, offset);
+        var author = NodeGit.Signature.create("zhenyufu", "zhenyufu@usc.edu", + new Date() , 0);
+        var committer = author; //NodeGit.Signature.create("Scott A Chacon","scott@github.com", 987654321, 90);
+        return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
+    })
+    .then(function(commitId) {
+         console.log("New Commit: ", commitId);
+    })
+    .then(function() {
+        return repo.getRemote("origin");
+    })
+    .then(function(remoteResult) {
+        console.log('remote Loaded');
+        remote = remoteResult;
+      return remote.push(
+      ["refs/heads/master:refs/heads/master"],
+      {
+        callbacks: {
+          credentials: function(url, userName) {
+              console.log("Requesting creds");
+                return NodeGit.Cred.userpassPlaintextNew("zhenyufu", "zhenyufu2000");
+              //return NodeGit.Cred.sshKeyFromAgent(userName);
+          }
+        }
+      }
+    );
+
     
     
+    })
+   .catch(function(reason) {
+        console.log(reason);
+    })
+    .done(function() {
+        console.log('remote Pushed!')
+        doNotification("success","success on sycn!");   
+    });
+ 
 
-
-                
-    doNotification("success","success on sycn!");   
+    
+               
 
     /*    
     exec('git add .', {cwd: newPath}, function (error, stdout, stderr){
