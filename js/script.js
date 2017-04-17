@@ -485,7 +485,13 @@ function doSaveCurrentContent(){
 
 
 function doSaveToFile(stuff, path){
-    FileSystem.writeFile(path, stuff, function (err) {
+    // add a newline
+    var finalStuff = stuff
+    if (stuff.slice(-1) != "\n"){
+        finalStuff += "\n";
+    }
+
+    FileSystem.writeFile(path, finalStuff, function (err) {
         if (err) { console.log("Write failed: " + err); }
 
     });
