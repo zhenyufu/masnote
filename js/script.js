@@ -82,6 +82,18 @@ onload = function() {
         doOpenBookIndexPage(getCurrentBook()); // open the last book index page for now 
     }
 
+    // check and create workSpace folder if not there 
+    try {
+        FileSystem.statSync(workspacePath);
+        // if it exist:
+    }
+    catch(err){
+        // nothing there
+        FileSystem.mkdir(workspacePath); 
+    }
+
+
+
 }
 
 
