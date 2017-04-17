@@ -411,14 +411,19 @@ function doSyncCurrentBook(message){
 
     .then(function(parents) {
         //var signature = Signature.create(name, email, time, offset);
-        var author = NodeGit.Signature.create(serverUser, serverUser, + new Date() , 0);
-        var committer = author; 
+       /*
+        You may be wondering what the difference is between author and committer. 
+        The author is the person who originally wrote the patch, 
+        whereas the committer is the person who last applied the patch.
+        */
+        // for now assume the same person 
+        var sig = NodeGit.Signature.now(serverUser, serverUser);
         if(parents){
-            return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parents]);
+            return repo.createCommit("HEAD", sig, sig, commitMessage, oid, [parents]);
         }
         else{
             // first commit parrent is empty 
-            return repo.createCommit("HEAD", author, committer, commitMessage, oid, []);
+            return repo.createCommit("HEAD", sig, sig, commitMessage, oid, []);
         }
     })
     .then(function(commitId) {
