@@ -25,7 +25,7 @@ var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayDown
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
 var workspacePath = "./workspace";
-var serverAddress = "http://";
+var serverAddress = "https://github.com/zhenyufu"; // "http://";
 var serverUser = "test@csmojo.com"
 var serverPass = "zhenyufu2000";
 
@@ -193,31 +193,38 @@ function handleButtonNewBook() {
     onsubmit: function(e) { 
         var newName = e.data.masName; 
         var newPath = getBookPath(newName); 
+        var remoteAddr = serverAddress + "/" + newName + ".git"; //"git@github.com:nodegit/push-example.git"
         
+        console.log(remoteAddr);
         // make the folder
-        FileSystem.mkdir(newPath);
+        //FileSystem.mkdir(newPath);
         var isBare = 0;
-        NodeGit.Repository.init(newPath, isBare).then(function (repo) {
-            
+        NodeGit.Repository.init(newPath, isBare)
+        .then(function (repo) {   
             //empty initial file
              FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
                  if (err) { console.log("Write failed: " + err); }
              });
-            
-             // set initial commit 
-             
-            // create new remote and push
-            // https://github.com/nodegit/nodegit/blob/master/examples/push.js
-
-             //success 
+            //success 
              var b = new Book(newPath);
-             //bookArray.push(b);
-             
              setMasContent("");
              doOpenBook(b);
+            // create new remote
+            return NodeGit.Remote.create(repo, "origin",remoteAddr);
+        })
+        .then(function(remote) {
+            return doSyncCurrentBook("initial commit"); 
 
-        }); 
-        
+        })
+        .catch(function(reason) {
+            console.log(reason);
+        })
+        .done(function() {
+            console.log('remote Pushed!');
+            doNotification("success","success on newBook!");
+     });
+
+
     }// onsubmit
   });
 }
@@ -361,10 +368,17 @@ function doNotification(type, message){
 }
 
 
-function doSyncCurrentBook(){
+function doBookAddCommitPush(){
+
+
+
+}
+
+
+function doSyncCurrentBook(message){
     var bookPath = getCurrentBook().getPath();
-    var upStream = getCurrentBook().getUpstream();
-    var commitMessage = "message here .."
+    //var upStream = getCurrentBook().getUpstream();
+    var commitMessage = message || "message here ..";
     
     var repo;
     var remote;
@@ -377,9 +391,10 @@ function doSyncCurrentBook(){
     })
     .then(function(index) {
        index.addAll();
-       index.write();
+      // index.write();
        return index.writeTree();
     })
+/*
     .then(function(oidResult) {
         oid = oidResult;
         return NodeGit.Reference.nameToId(repo, "HEAD");
@@ -387,13 +402,24 @@ function doSyncCurrentBook(){
     .then(function(head) {
         return repo.getCommit(head);
     })
-    .then(function(parent) {
-        //var signature = Signature.create(name, email, time, offset);
-        //var author = NodeGit.Signature.create("zhenyufu", "zhenyufu@usc.edu", + new Date() , 0);
+  */
+    .then(function(oidResult) {     
+        oid = oidResult;
+        return repo.getHeadCommit();
+    })
 
+
+    .then(function(parents) {
+        //var signature = Signature.create(name, email, time, offset);
         var author = NodeGit.Signature.create(serverUser, serverUser, + new Date() , 0);
-        var committer = author; //NodeGit.Signature.create("Scott A Chacon","scott@github.com", 987654321, 90);
-        return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
+        var committer = author; 
+        if(parents){
+            return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parents]);
+        }
+        else{
+            // first commit parrent is empty 
+            return repo.createCommit("HEAD", author, committer, commitMessage, oid, []);
+        }
     })
     .then(function(commitId) {
          console.log("New Commit: ", commitId);
@@ -425,26 +451,13 @@ function doSyncCurrentBook(){
         console.log(reason);
     })
     .done(function() {
-        console.log('remote Pushed!')
+        console.log('remote Pushed!');
         doNotification("success","success on sycn!");   
     });
  
 
     
                
-
-    /*    
-    exec('git add .', {cwd: newPath}, function (error, stdout, stderr){
-        console.log("pwd: " + error + " : " + stdout);
-        exec('git commit -m ' + commitMessage, {cwd: newPath}, function (error, stdout, stderr){
-            console.log("pwd: " + error + " : " + stdout);
-             exec('git push', {cwd: newPath}, function (error, stdout, stderr){
-                console.log("pwd: " + error + " : " + stdout);
-                doNotification("success","success on sycn!");   
-            });
-        });
-    });
-    */
 }
 
 
