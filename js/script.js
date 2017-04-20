@@ -25,8 +25,8 @@ var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayDown
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
 var workspacePath = "./workspace";
-var serverAddress = "https://github.com/zhenyufu"; // "http://";
-var serverUser = "test@csmojo.com"
+var serverAddress = "https://github.com/davidzfu"; // "http://";
+var serverUser = "test@csmojo.com";
 var serverPass = "zhenyufu2000";
 
 var bookArray = [];// array of book objects 
