@@ -214,10 +214,7 @@ function handleButtonNewBook() {
         NodeGit.Repository.init(newPath, isBare)
         .then(function (repo) {   
             //empty initial file
-             FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
-                 if (err) { console.log("Write failed: " + err); }
-             });
-            //success 
+           //success 
              var b = new Book(newPath);
              setMasContent("");
              doOpenBook(b);
@@ -225,6 +222,9 @@ function handleButtonNewBook() {
             return NodeGit.Remote.create(repo, "origin",remoteAddr);
         })
         .then(function(remote) {
+              FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
+                 if (err) { console.log("Write failed: " + err); }
+             });
             return doSyncCurrentBook("initial commit"); 
 
         })
