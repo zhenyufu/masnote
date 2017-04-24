@@ -415,8 +415,10 @@ function doBookPull(){
     })
     .then(function() {
         repo.mergeBranches("master", "origin/master");
-        doOpenPage(masFilePath);
     })
+     .then(function() {
+         doOpenPage(masFilePath);
+     })
     .done(function() {
         console.log("Done!");
     });
@@ -548,7 +550,8 @@ function doOpenPage(myPath){
     FileSystem.readFile(myPath, function (err, data) {
         if (err) { console.log("Read error: " + err); }
         //doSaveCurrentContent();////////////////////////////////////////////////////////////////////////saves the current first
-        
+        console.log(String(data));
+
         setMasContent(String(data));
         setMasFilePath(myPath);
         
