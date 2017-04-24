@@ -21,7 +21,8 @@ const NodeGit = require("nodegit");
 
 ////////////////////////////////////////////////////// init {
 
-var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayDownloadBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings;
+var buttonArrayNewPage, buttonArrayNewBook, buttonArrayOpenBook, buttonArrayDownloadBook, buttonArrayOpenPage, buttonArraySaveBook, buttonArraySaveAll, buttonArraySettings, buttonArrayPullBook;
+
 var masContent, masFilePath, masCurrentBookIndex, masServerAddress, sidebarContent;
 var mceEditor;
 var workspacePath = "./workspace";
@@ -60,6 +61,7 @@ onload = function() {
     buttonArrayDownloadBook = document.getElementsByClassName("mas-download-book");
     buttonArraySaveBook = document.getElementsByClassName("mas-save-book");
     buttonArraySettings = document.getElementsByClassName("mas-settings");
+    buttonArrayPullBook = document.getElementsByClassName("mas-pull-book");
     for(var i = 0; i < buttonArrayNewPage.length; i++){ buttonArrayNewPage.item(i).addEventListener("click", handleButtonNewPage); }
     for(var i = 0; i < buttonArrayNewBook.length; i++){ buttonArrayNewBook.item(i).addEventListener("click", handleButtonNewBook); }
     for(var i = 0; i < buttonArrayOpenBook.length; i++){ buttonArrayOpenBook.item(i).addEventListener("click", handleButtonOpenBook); }
@@ -67,6 +69,7 @@ onload = function() {
     for(var i = 0; i < buttonArraySaveBook.length; i++){ buttonArraySaveBook.item(i).addEventListener("click", handleButtonSaveBook); }
     for(var i = 0; i < buttonArraySettings.length; i++){ buttonArraySettings.item(i).addEventListener("click", handleButtonSettings); }
 
+    for(var i = 0; i < buttonArrayPullBook.length; i++){ buttonArrayPullBook.item(i).addEventListener("click", handleButtonPullBook); }
     // toggle for enabling saved config
     //getConfig();
     config.clear();
@@ -225,6 +228,9 @@ function handleButtonNewBook() {
               FileSystem.writeFile(newPath + "/index.html", " ", function (err) {
                  if (err) { console.log("Write failed: " + err); }
              });
+            
+            // somehow create it on the server side 
+
             return doSyncCurrentBook("initial commit"); 
 
         })
@@ -360,6 +366,13 @@ function handleButtonSaveBook() {
     //mceEditor.getContent();
 }
 
+
+function handleButtonPullBook() {
+doBookPull();
+
+}
+
+
 ////////////////////////////////////////////////////// Handlers }
 
 
@@ -383,6 +396,32 @@ function doNotification(type, message){
 function doBookAddCommitPush(){
 
 
+
+}
+
+
+function doBookPull(){
+    var bookPath = getCurrentBook().getPath();
+    var repo;
+
+    NodeGit.Repository.open(bookPath)
+    .then(function(repoResult) {
+        repo = repoResult;
+        return repo.fetchAll({
+            credentials: function(url, userName) {
+                return NodeGit.Cred.userpassPlaintextNew(serverUser, serverPass); 
+            }
+        }, true);
+    })
+    .then(function() {
+        repo.mergeBranches("master", "origin/master");
+        doOpenPage(masFilePath);
+    })
+    .done(function() {
+        console.log("Done!");
+    });
+
+    // refresh the editor 
 
 }
 
@@ -479,7 +518,11 @@ function doSyncCurrentBook(message){
 
 
 function doSaveCurrentContent(){
-    // write editor to current file path 
+    // write editor to current file path
+    if (!masFilePath){
+        console.log("noppppppe");
+        return;
+    }
     doSaveToFile(mceEditor.getContent(), masFilePath);
 }
 
@@ -504,7 +547,7 @@ function doSaveToFile(stuff, path){
 function doOpenPage(myPath){
     FileSystem.readFile(myPath, function (err, data) {
         if (err) { console.log("Read error: " + err); }
-        doSaveCurrentContent();////////////////////////////////////saves the current first
+        //doSaveCurrentContent();////////////////////////////////////////////////////////////////////////saves the current first
         
         setMasContent(String(data));
         setMasFilePath(myPath);
