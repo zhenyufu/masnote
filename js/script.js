@@ -218,9 +218,10 @@ function handleButtonNewBook() {
         .then(function (repo) {   
             //empty initial file
            //success 
-             var b = new Book(newPath);
+           handleOpenBook(newPath);  
+           //var b = new Book(newPath);
              setMasContent("");
-             doOpenBook(b);
+             //doOpenBook(b);
             // create new remote
             return NodeGit.Remote.create(repo, "origin",remoteAddr);
         })
@@ -283,7 +284,12 @@ function handleButtonOpenPage() {
 function handleButtonOpenBook() {
     dialog.showOpenDialog({properties:  ['openDirectory']}, function(myPath) { 
         myPath = myPath[0];
-        if(myPath) {
+        handleOpenBook(myPath);     
+    });
+}
+
+function handleOpenBook(myPath){
+  if(myPath) {
             var b = new Book(myPath); 
             // iterate the pages and give that to b
             FileSystem.readdir(myPath, (err, dir) => { //readDir(myPath, function(dir) {
@@ -296,9 +302,8 @@ function handleButtonOpenBook() {
                 doOpenBook(b);
             });
         } 
-    });
-}
 
+}
 
 function handleButtonDownloadBook(){
     mceEditor.windowManager.open({
@@ -312,8 +317,9 @@ function handleButtonDownloadBook(){
         try {
             FileSystem.statSync(myPath);
             // if it exist:
-            var b = new Book(myPath);
-            doOpenBook(b);
+            handleOpenBook(myPath);
+            //var b = new Book(myPath);
+            //doOpenBook(b);
             return;
         }
         catch(err){
@@ -325,9 +331,9 @@ function handleButtonDownloadBook(){
                 return repo.getMasterCommit();  //getCommit("59b20b8d5c6ff8d09518454d4dd8b7b30f095ab5");
             })
             .then(function(commit) {
-                var b = new Book(myPath);
-                doOpenBook(b); 
-            
+                //var b = new Book(myPath);
+                //doOpenBook(b); 
+                handleOpenBook(myPath);   
                 //return commit.getEntry("index.html");
             })
             /*
@@ -654,6 +660,7 @@ function doAddPageToSidebar(myPath, pageListEle, book, doSetClick){
 /* add all pages of the given book to the sidebar */
 function doAddPagesToSidebar(book){
     var pageListEle = getPageListEle(book); //document.getElementById("display-" + book.getName() + "-pageList");
+    console.log("in doAddPagesToSidebar");
     console.log(book.pageArray);
     for (var i = 0; i < book.pageArray.length; i++){
         //bookEle.appendChild(pageEle)
