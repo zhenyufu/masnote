@@ -30,17 +30,3 @@ npm i nodegit --target_platform=linux
 
 ```
 
-
-## recycle commands
-
-```
-zip -r dist/testwin.zip dist/win-unpacked
-mv dist/testwin.zip /media/sf_myshareDebianMain/
-cp dist/masnote\ Setup\ 0.0.1.exe /media/sf_myshareDebianMain/
-BUILD_ONLY=true ELECTRON_VERSION=1.3.5 npm install nodegit 
-npm rebuild --runtime=electron --target=1.3.5 --disturl=https://atom.io/download/atom-shell --arch=x64 --build-from-source --abi=49
-npm rebuild --runtime=electron --target=1.3.5 --disturl=https://atom.io/download/atom-shell --arch=x64 --target_platform=win32 --abi=49
-electron-packager . masnote --platform=win32 --electron-version=1.3.5 --overwrite
-cp -r masnote-win32-x64 /media/sf_myshareDebianMain/
-npm rebuild --runtime=electron --target=1.3.5 --disturl=https://atom.io/download/atom-shell --abi=49
-```
